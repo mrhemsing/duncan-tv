@@ -1,0 +1,6 @@
+{
+  "title": "Tonight's Broadcast",
+  "description": "Editorial playlist for Duncan TV. When filled, these items define the exact on-air loop.",
+  "mode": "auto-fallback",
+  "items": []
+}

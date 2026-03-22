@@ -1,0 +1,18 @@
+{
+  "name": "duncan-tv-story-archive",
+  "version": "1.0.0",
+  "description": "Duncan Trussell Instagram story archiver",
+  "main": "story-job.js",
+  "scripts": {
+    "login": "node story-job.js --login",
+    "run": "node story-job.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "playwright": "^1.58.2"
+  }
+}
