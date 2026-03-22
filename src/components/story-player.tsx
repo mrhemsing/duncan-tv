@@ -127,7 +127,7 @@ export function StoryPlayer({
             />
 
             <div
-              className={`pointer-events-none absolute left-1/2 top-1/2 z-30 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white/90 backdrop-blur-sm transition-all duration-200 sm:h-16 sm:w-16 ${
+              className={`pointer-events-none absolute left-[calc(50%+10px)] top-[calc(50%+50px)] z-30 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white/90 backdrop-blur-sm transition-all duration-200 sm:h-16 sm:w-16 ${
                 paused ? "opacity-100 scale-100" : "opacity-0 scale-90"
               }`}
             >

@@ -184,41 +184,95 @@ function makeVideoResponseTracker(page, log) {
 }
 
 async function detectStoryAsset(page, videoTracker) {
-  const video = page.locator('video').first();
-  if (await video.count().catch(() => 0)) {
+  const readVideoAsset = async () => {
+    const video = page.locator('video').first();
+    if (!(await video.count().catch(() => 0))) return null;
+
     const src = await video.getAttribute('src').catch(() => null);
     const currentSrc = await video.evaluate((el) => el.currentSrc || null).catch(() => null);
-    if (src || currentSrc) {
-      const videoInfo = await video.evaluate((el) => {
-        const perfUrls = Array.from(performance.getEntriesByType('resource'))
-          .map((entry) => entry && entry.name)
-          .filter(Boolean)
-          .filter((name) => /^https?:\/\//i.test(name))
-          .filter((name) => /\.mp4(\?|$)|video|fbcdn/i.test(name))
-          .slice(-30);
+    if (!(src || currentSrc)) return null;
 
-        return {
-          durationSec: Number(el.duration) || null,
-          currentSrc: el.currentSrc || null,
-          src: el.src || null,
-          poster: el.poster || null,
-          sourceUrls: Array.from(el.querySelectorAll('source'))
-            .map((node) => node.src || node.getAttribute('src') || null)
-            .filter(Boolean),
-          perfUrls,
-        };
-      }).catch(() => ({ durationSec: null, currentSrc: currentSrc || null, src: src || null, poster: null, sourceUrls: [], perfUrls: [] }));
+    const videoInfo = await video.evaluate((el) => {
+      const perfUrls = Array.from(performance.getEntriesByType('resource'))
+        .map((entry) => entry && entry.name)
+        .filter(Boolean)
+        .filter((name) => /^https?:\/\//i.test(name))
+        .filter((name) => /\.mp4(\?|$)|video|fbcdn/i.test(name))
+        .slice(-30);
+
       return {
-        type: 'video',
-        url: videoInfo.currentSrc || videoInfo.src || src || currentSrc,
-        currentSrc: videoInfo.currentSrc || currentSrc || src || null,
-        poster: videoInfo.poster || null,
-        sourceUrls: videoInfo.sourceUrls || [],
-        perfUrls: videoInfo.perfUrls || [],
-        durationSec: videoInfo.durationSec,
+        durationSec: Number(el.duration) || null,
+        currentSrc: el.currentSrc || null,
+        src: el.src || null,
+        poster: el.poster || null,
+        sourceUrls: Array.from(el.querySelectorAll('source'))
+          .map((node) => node.src || node.getAttribute('src') || null)
+          .filter(Boolean),
+        perfUrls,
       };
-    }
-  }
+    }).catch(() => ({ durationSec: null, currentSrc: currentSrc || null, src: src || null, poster: null, sourceUrls: [], perfUrls: [] }));
+
+    return {
+      type: 'video',
+      url: videoInfo.currentSrc || videoInfo.src || src || currentSrc,
+      currentSrc: videoInfo.currentSrc || currentSrc || src || null,
+      poster: videoInfo.poster || null,
+      sourceUrls: videoInfo.sourceUrls || [],
+      perfUrls: videoInfo.perfUrls || [],
+      durationSec: videoInfo.durationSec,
+    };
+  };
+
+  const getTrackedCandidates = async () => {
+    const storyKey = await getActiveAssetKey(page).catch(() => null);
+    if (!storyKey || typeof videoTracker?.getCandidates !== 'function') return [];
+    return videoTracker.getCandidates(storyKey) || [];
+  };
+
+  const pickTrackedVideoAsset = async () => {
+    const trackedCandidates = await getTrackedCandidates();
+    const viableTrackedCandidates = (trackedCandidates || []).filter((candidate) => {
+      if (!candidate || !candidate.url) return false;
+      if (!candidate.contentLength) return true;
+      return candidate.contentLength >= 200000;
+    });
+
+    if (!viableTrackedCandidates.length) return null;
+
+    const best = [...viableTrackedCandidates].sort((a, b) => scoreVideoCandidate(b, { poster: null }) - scoreVideoCandidate(a, { poster: null }))[0];
+    return {
+      type: 'video',
+      url: best.url,
+      currentSrc: best.url,
+      poster: null,
+      sourceUrls: [],
+      perfUrls: [],
+      trackedCandidates: viableTrackedCandidates,
+      durationSec: null,
+    };
+  };
+
+  const storyContext = await page.evaluate(() => {
+    const bodyText = document.body?.innerText || '';
+    const watchFullReel = /watch full reel/i.test(bodyText);
+    const sharedReel = /shared a reel/i.test(bodyText) || /reel by/i.test(bodyText);
+    return { watchFullReel, sharedReel };
+  }).catch(() => ({ watchFullReel: false, sharedReel: false }));
+
+  let videoAsset = await readVideoAsset();
+  if (videoAsset) return videoAsset;
+
+  const initialTracked = await pickTrackedVideoAsset();
+  if (initialTracked) return initialTracked;
+
+  const waitMs = storyContext.watchFullReel || storyContext.sharedReel ? 2200 : 900;
+  await page.waitForTimeout(waitMs).catch(() => null);
+
+  videoAsset = await readVideoAsset();
+  if (videoAsset) return videoAsset;
+
+  const trackedVideoAsset = await pickTrackedVideoAsset();
+  if (trackedVideoAsset) return trackedVideoAsset;
 
   const imageAsset = await page.evaluate(() => {
     const candidates = Array.from(document.querySelectorAll('img'))
