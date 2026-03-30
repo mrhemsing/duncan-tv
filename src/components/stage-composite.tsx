@@ -100,9 +100,9 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
                         </svg>
                       </div>
                       <div className="text-[11px] uppercase tracking-[0.32em]">
-                        FLIP YOUR SCREEN
+                        HUMAN DETECTED.
                         <br />
-                        HORIZONTALLY TO VIEW
+                        ROTATE DEVICE TO CONTINUE.
                       </div>
                     </div>
                   </div>
