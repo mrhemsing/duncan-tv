@@ -36,14 +36,17 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
           className="fixed right-3 top-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
           title={muted ? "Turn sound on" : "Turn sound off"}
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 9v6h4l5 4V5l-5 4H5z" fill="currentColor" stroke="none" />
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 5 8.5 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h3.5L14 19V5Z" fill="currentColor" stroke="none" />
             {muted ? (
-              <path d="M16 8l5 8" />
+              <>
+                <path d="M17 9l4 4" />
+                <path d="M21 9l-4 4" />
+              </>
             ) : (
               <>
                 <path d="M17.5 8.5a5 5 0 0 1 0 7" />
-                <path d="M19.8 6a8.5 8.5 0 0 1 0 12" />
+                <path d="M19.75 6a8.5 8.5 0 0 1 0 12" />
               </>
             )}
           </svg>
