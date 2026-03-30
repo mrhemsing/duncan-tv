@@ -5,8 +5,39 @@ import Image from "next/image";
 import { StoryPlayer } from "@/components/story-player";
 import type { StoryItem } from "@/lib/story-data";
 
+function useMobileLandscapeGate() {
+  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+
+  useEffect(() => {
+    const coarseMedia = window.matchMedia("(pointer: coarse)");
+    const portraitMedia = window.matchMedia("(orientation: portrait)");
+    const narrowMedia = window.matchMedia("(max-width: 899px)");
+
+    const check = () => {
+      const nextIsPortrait = coarseMedia.matches && narrowMedia.matches && portraitMedia.matches;
+      setIsMobilePortrait(nextIsPortrait);
+    };
+
+    check();
+    coarseMedia.addEventListener?.("change", check);
+    portraitMedia.addEventListener?.("change", check);
+    narrowMedia.addEventListener?.("change", check);
+    window.addEventListener("orientationchange", check);
+
+    return () => {
+      coarseMedia.removeEventListener?.("change", check);
+      portraitMedia.removeEventListener?.("change", check);
+      narrowMedia.removeEventListener?.("change", check);
+      window.removeEventListener("orientationchange", check);
+    };
+  }, []);
+
+  return isMobilePortrait;
+}
+
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
+  const isMobilePortrait = useMobileLandscapeGate();
   const emit = (name: string) => () => window.dispatchEvent(new Event(name));
 
   useEffect(() => {
@@ -56,7 +87,28 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
           <div className="absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black">
             <div className="absolute left-[calc(39.33625%+18px)] top-[calc(16.6%+60px-40px)] z-0 w-[18.792%] rotate-[0deg] transform-gpu">
               <div className="relative aspect-[9/16] overflow-hidden bg-black">
-                <StoryPlayer stories={stories} className="h-full w-full" />
+                {isMobilePortrait ? (
+                  <div className="absolute inset-0 z-20 flex h-full w-full items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to view">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_58%)]" />
+                    <div className="absolute inset-0 opacity-15 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
+                    <div className="relative z-10 flex max-w-[80%] flex-col items-center gap-5 text-center text-[#d7d0bc]">
+                      <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[#d7d0bc]/45 bg-black/35 backdrop-blur-sm sm:h-32 sm:w-32">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-14 w-14 rotate-90 text-[#d7d0bc] sm:h-16 sm:w-16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="7" y="3" width="10" height="18" rx="2.5" />
+                          <path d="M12 6h0.01" />
+                          <path d="M10 18h4" />
+                        </svg>
+                      </div>
+                      <div className="text-[11px] uppercase tracking-[0.32em]">
+                        FLIP YOUR SCREEN
+                        <br />
+                        HORIZONTALLY TO VIEW
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <StoryPlayer stories={stories} className="h-full w-full" />
+                )}
               </div>
             </div>
 
