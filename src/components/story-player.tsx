@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { StoryItem } from "@/lib/story-data";
 
 export function StoryPlayer({
@@ -12,22 +12,43 @@ export function StoryPlayer({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [muted, setMuted] = useState(true);
-  const [paused, setPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const lastStoryIdsRef = useRef<string>("");
   const activeStory = stories[activeIndex];
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [stories.length]);
+  const clampIndex = useCallback(
+    (index: number) => {
+      if (!stories.length) return 0;
+      return ((index % stories.length) + stories.length) % stories.length;
+    },
+    [stories.length],
+  );
+
+  const goToIndex = useCallback(
+    (index: number) => {
+      setActiveIndex(clampIndex(index));
+    },
+    [clampIndex],
+  );
+
+  const nextMedia = useCallback(() => {
+    setActiveIndex((current) => clampIndex(current + 1));
+  }, [clampIndex]);
+
+  const prevMedia = useCallback(() => {
+    setActiveIndex((current) => clampIndex(current - 1));
+  }, [clampIndex]);
 
   useEffect(() => {
-    setPaused(false);
-  }, [activeIndex]);
+    const storyIds = stories.map((story) => story.id).join("|");
+    if (storyIds !== lastStoryIdsRef.current) {
+      lastStoryIdsRef.current = storyIds;
+      setActiveIndex(0);
+    }
+  }, [stories]);
 
   useEffect(() => {
     const toggleAudio = () => setMuted((value) => !value);
-    const prevMedia = () => setActiveIndex((value) => (value - 1 + stories.length) % stories.length);
-    const nextMedia = () => setActiveIndex((value) => (value + 1) % stories.length);
 
     window.addEventListener("duncan-tv-toggle-audio", toggleAudio as EventListener);
     window.addEventListener("duncan-tv-prev-media", prevMedia as EventListener);
@@ -38,36 +59,29 @@ export function StoryPlayer({
       window.removeEventListener("duncan-tv-prev-media", prevMedia as EventListener);
       window.removeEventListener("duncan-tv-next-media", nextMedia as EventListener);
     };
-  }, [stories.length]);
+  }, [nextMedia, prevMedia]);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = muted;
-      if (!muted) {
-        videoRef.current.play().catch(() => null);
-      }
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = muted;
+    video.defaultMuted = muted;
+
+    if (!muted) {
+      video.play().catch(() => null);
     }
-  }, [muted, activeIndex]);
+  }, [muted, activeStory?.id]);
 
   useEffect(() => {
-    if (!videoRef.current || activeStory?.assetType !== "video") return;
-
-    if (paused) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play().catch(() => null);
-    }
-  }, [paused, activeStory]);
-
-  useEffect(() => {
-    if (!stories.length || !activeStory || activeStory.assetType === "video" || paused) return;
+    if (!stories.length || !activeStory || activeStory.assetType === "video") return;
 
     const timeout = window.setTimeout(() => {
-      setActiveIndex((current) => (current + 1) % stories.length);
+      nextMedia();
     }, activeStory.durationSeconds * 1000);
 
     return () => window.clearTimeout(timeout);
-  }, [activeStory, stories.length, paused]);
+  }, [activeStory, stories.length, nextMedia]);
 
   const progressItems = useMemo(
     () =>
@@ -79,11 +93,6 @@ export function StoryPlayer({
     [activeIndex, stories],
   );
 
-  const togglePlayback = () => {
-    if (activeStory?.assetType !== "video") return;
-    setPaused((value) => !value);
-  };
-
   if (!activeStory) {
     return (
       <div className={`flex items-center justify-center bg-black text-xs uppercase tracking-[0.24em] text-white/60 ${className}`}>
@@ -94,6 +103,26 @@ export function StoryPlayer({
 
   return (
     <div className={`relative overflow-hidden bg-black ${className}`}>
+      <button
+        type="button"
+        onClick={() => setMuted((value) => !value)}
+        className="absolute right-[5%] top-[7%] z-30 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white/90 backdrop-blur-sm transition hover:bg-black/60 sm:h-10 sm:w-10"
+        aria-label={muted ? "Turn sound on" : "Turn sound off"}
+        title={muted ? "Turn sound on" : "Turn sound off"}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor">
+          <path d="M3 10v4h4l5 4V6L7 10H3z" />
+          {muted ? (
+            <path d="M18.3 8.3 16.89 6.89 14.8 8.98l-2.09-2.09-1.41 1.41 2.09 2.09-2.09 2.09 1.41 1.41 2.09-2.09 2.09 2.09 1.41-1.41-2.09-2.09 2.09-2.09z" />
+          ) : (
+            <>
+              <path d="M16.5 12a4.5 4.5 0 0 0-2.2-3.86v7.72A4.5 4.5 0 0 0 16.5 12z" />
+              <path d="M14.3 3.23v2.06a7.5 7.5 0 0 1 0 13.42v2.06a9.5 9.5 0 0 0 0-17.54z" />
+            </>
+          )}
+        </svg>
+      </button>
+
       <div className="absolute inset-x-[5%] top-[5%] z-20 flex gap-1.5 opacity-85">
         {progressItems.map((item) => (
           <div key={item.id} className="h-1 flex-1 overflow-hidden rounded-full bg-white/12">
@@ -110,33 +139,26 @@ export function StoryPlayer({
         {activeStory.assetType === "video" ? (
           <button
             type="button"
-            onClick={togglePlayback}
+            onClick={nextMedia}
             className="relative h-full w-full cursor-pointer"
-            aria-label={paused ? "Play video" : "Pause video"}
+            aria-label="Skip to next story"
           >
             <video
-              key={activeStory.id}
               ref={videoRef}
               src={activeStory.src}
-              className="h-[130%] w-[130%] max-w-none object-cover"
+              className="h-[90%] w-[90%] max-w-none object-cover"
               autoPlay
               muted={muted}
               playsInline
               preload="auto"
-              onEnded={() => setActiveIndex((current) => (current + 1) % stories.length)}
+              onEnded={nextMedia}
             />
-
-            <div
-              className={`pointer-events-none absolute left-[calc(50%+10px)] top-[calc(50%+50px)] z-30 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white/90 backdrop-blur-sm transition-all duration-200 sm:h-16 sm:w-16 ${
-                paused ? "opacity-100 scale-100" : "opacity-0 scale-90"
-              }`}
-            >
-              <span className="text-xl sm:text-2xl">▶</span>
-            </div>
           </button>
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={activeStory.src} alt={activeStory.title} className="h-[130%] w-[130%] max-w-none object-cover" />
+          <button type="button" onClick={nextMedia} className="relative h-full w-full cursor-pointer" aria-label="Skip to next story">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={activeStory.src} alt={activeStory.title} className="h-[90%] w-[90%] max-w-none object-cover" />
+          </button>
         )}
       </div>
 
@@ -145,7 +167,10 @@ export function StoryPlayer({
 
       <div className="pointer-events-none absolute bottom-[6%] left-[6%] right-[6%] z-20 flex items-center justify-between text-[9px] uppercase tracking-[0.22em] text-white/65 sm:text-[10px]">
         <span>{activeStory.sourceLabel}</span>
-        <span>{activeStory.assetType}{activeStory.assetType === "video" ? muted ? " · muted" : " · audio on" : ""}</span>
+        <span>
+          {activeStory.assetType}
+          {activeStory.assetType === "video" ? (muted ? " · muted" : " · audio on") : ""}
+        </span>
       </div>
     </div>
   );

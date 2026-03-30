@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 import { StageComposite } from "@/components/stage-composite";
 import { loadLatestStoryArchive } from "@/lib/story-data";
 
