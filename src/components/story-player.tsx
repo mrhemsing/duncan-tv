@@ -136,7 +136,6 @@ export function StoryPlayer({
       </div>
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_45%,_rgba(0,0,0,0.18)_100%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[24%] bg-gradient-to-t from-black via-black/72 to-transparent" />
       <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.06)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
 
       <div className="pointer-events-none absolute bottom-[6%] left-[6%] right-[6%] z-20 flex items-center justify-between text-[9px] uppercase tracking-[0.22em] text-white/65 sm:text-[10px]">
