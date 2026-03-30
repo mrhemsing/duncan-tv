@@ -45,7 +45,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
 
 
             <Image
-              src="/duncan-tv-bg-99.webp"
+              src="/duncan-tv-bg-998.webp"
               alt="Duncan TV illustrated stage"
               fill
               className="pointer-events-none z-20 object-contain object-center"
