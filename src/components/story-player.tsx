@@ -115,12 +115,13 @@ export function StoryPlayer({
         ))}
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black" onClick={nextMedia} role="button" tabIndex={0} onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          nextMedia();
-        }
-      }} aria-label="Skip to next story">
+      <button
+        type="button"
+        className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-black"
+        onClick={nextMedia}
+        onPointerUp={nextMedia}
+        aria-label="Skip to next story"
+      >
         {activeStory.assetType === "video" ? (
           <video
             ref={videoRef}
@@ -136,7 +137,7 @@ export function StoryPlayer({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={activeStory.src} alt={activeStory.title} className="h-[90%] w-[90%] max-w-none cursor-pointer object-cover" />
         )}
-      </div>
+      </button>
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_45%,_rgba(0,0,0,0.18)_100%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.06)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />

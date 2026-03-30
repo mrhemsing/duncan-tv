@@ -21,6 +21,22 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
       </div>
 
       <div className="animate-[stageReveal_0.5s_ease_1.2s_forwards] opacity-0">
+        <div className="fixed right-4 top-4 z-[120] sm:right-6 sm:top-6">
+          <button
+            type="button"
+            aria-label="Toggle screen audio"
+            onClick={emit("duncan-tv-toggle-audio")}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white/90 backdrop-blur-sm transition hover:bg-black/70"
+            title="Toggle sound"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="currentColor">
+              <path d="M3 10v4h4l5 4V6L7 10H3z" />
+              <path d="M16.5 12a4.5 4.5 0 0 0-2.2-3.86v7.72A4.5 4.5 0 0 0 16.5 12z" />
+              <path d="M14.3 3.23v2.06a7.5 7.5 0 0 1 0 13.42v2.06a9.5 9.5 0 0 0 0-17.54z" />
+            </svg>
+          </button>
+        </div>
+
         <div className="relative h-screen w-screen overflow-hidden bg-black">
           <div className="absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black">
             <div className="absolute left-[calc(39.33625%+18px)] top-[calc(16.6%+60px-40px)] z-0 w-[15.66%] rotate-[-0.8deg] transform-gpu">
@@ -28,21 +44,6 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
                 <StoryPlayer stories={stories} className="h-full w-full" />
               </div>
             </div>
-
-            <button
-              type="button"
-              aria-label="Toggle screen audio"
-              onClick={emit("duncan-tv-toggle-audio")}
-              className="absolute right-[1.8%] top-[3.2%] z-50 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white/90 backdrop-blur-sm transition hover:bg-black/70"
-              title="Toggle sound"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="currentColor">
-                <path d="M3 10v4h4l5 4V6L7 10H3z" />
-                <path d="M16.5 12a4.5 4.5 0 0 0-2.2-3.86v7.72A4.5 4.5 0 0 0 16.5 12z" />
-                <path d="M14.3 3.23v2.06a7.5 7.5 0 0 1 0 13.42v2.06a9.5 9.5 0 0 0 0-17.54z" />
-              </svg>
-            </button>
-
 
             <Image
               src="/duncan-tv-bg-998.webp"
