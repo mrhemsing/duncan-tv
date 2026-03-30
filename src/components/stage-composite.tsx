@@ -55,6 +55,23 @@ function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { si
   );
 }
 
+function PortraitRotateGate() {
+  return (
+    <div className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to view">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_58%)]" />
+      <div className="absolute inset-0 opacity-15 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
+      <div className="relative z-10 flex max-w-[80%] flex-col items-center gap-5 text-center text-[#d7d0bc]">
+        <RotateAnimationCircle />
+        <div className="text-[11px] uppercase tracking-[0.32em]">
+          HUMAN DETECTED.
+          <br />
+          ROTATE DEVICE TO CONTINUE.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
   const isMobilePortrait = useMobileLandscapeGate();
@@ -65,6 +82,10 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
     window.addEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
     return () => window.removeEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
   }, []);
+
+  if (isMobilePortrait) {
+    return <PortraitRotateGate />;
+  }
 
   return (
     <>
@@ -105,22 +126,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
           <div className="absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black">
             <div className="absolute left-[calc(39.33625%+18px)] top-[calc(16.6%+60px-40px)] z-0 w-[18.792%] rotate-[0deg] transform-gpu">
               <div className="relative aspect-[9/16] overflow-hidden bg-black">
-                {isMobilePortrait ? (
-                  <div className="absolute inset-0 z-20 flex h-full w-full items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to view">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_58%)]" />
-                    <div className="absolute inset-0 opacity-15 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
-                    <div className="relative z-10 flex max-w-[80%] flex-col items-center gap-5 text-center text-[#d7d0bc]">
-                      <RotateAnimationCircle />
-                      <div className="text-[11px] uppercase tracking-[0.32em]">
-                        HUMAN DETECTED.
-                        <br />
-                        ROTATE DEVICE TO CONTINUE.
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <StoryPlayer stories={stories} className="h-full w-full" />
-                )}
+                <StoryPlayer stories={stories} className="h-full w-full" />
               </div>
             </div>
 
