@@ -24,13 +24,6 @@ export function StoryPlayer({
     [stories.length],
   );
 
-  const goToIndex = useCallback(
-    (index: number) => {
-      setActiveIndex(clampIndex(index));
-    },
-    [clampIndex],
-  );
-
   const nextMedia = useCallback(() => {
     setActiveIndex((current) => clampIndex(current + 1));
   }, [clampIndex]);
@@ -120,7 +113,7 @@ export function StoryPlayer({
           <video
             ref={videoRef}
             src={activeStory.src}
-            className="h-[117%] w-[117%] max-w-none object-cover"
+            className="h-full w-[117%] max-w-none object-cover"
             autoPlay
             muted={muted}
             playsInline
@@ -129,7 +122,7 @@ export function StoryPlayer({
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={activeStory.src} alt={activeStory.title} className="h-[117%] w-[117%] max-w-none object-cover" />
+          <img src={activeStory.src} alt={activeStory.title} className="h-full w-[117%] max-w-none object-cover" />
         )}
 
         <button
