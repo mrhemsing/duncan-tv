@@ -92,12 +92,20 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_58%)]" />
                     <div className="absolute inset-0 opacity-15 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
                     <div className="relative z-10 flex max-w-[80%] flex-col items-center gap-5 text-center text-[#d7d0bc]">
-                      <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[#d7d0bc]/45 bg-black/35 backdrop-blur-sm sm:h-32 sm:w-32">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-14 w-14 rotate-90 text-[#d7d0bc] sm:h-16 sm:w-16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="7" y="3" width="10" height="18" rx="2.5" />
-                          <path d="M12 6h0.01" />
-                          <path d="M10 18h4" />
-                        </svg>
+                      <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border border-[#d7d0bc]/45 bg-black/35 backdrop-blur-sm sm:h-32 sm:w-32">
+                        <video
+                          className="h-full w-full object-cover"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          poster="/mobile-rotate-poster.jpg"
+                          aria-hidden="true"
+                        >
+                          <source src="/mobile-rotate-loop.webm" type="video/webm" />
+                          <source src="/mobile-rotate-loop.mp4" type="video/mp4" />
+                        </video>
                       </div>
                       <div className="text-[11px] uppercase tracking-[0.32em]">
                         HUMAN DETECTED.
