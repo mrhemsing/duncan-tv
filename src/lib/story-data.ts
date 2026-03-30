@@ -38,7 +38,6 @@ type FlatStoryCandidate = {
   type: StoryAssetType;
   source: StorySource;
   fileSize: number;
-  modifiedAt: number;
 };
 
 const STORY_ROOT = path.join(process.cwd(), "media", "stories");
@@ -65,7 +64,6 @@ function fileOrderValue(filename: string) {
 }
 
 function newestFirst(a: FlatStoryCandidate, b: FlatStoryCandidate) {
-  if (b.modifiedAt !== a.modifiedAt) return b.modifiedAt - a.modifiedAt;
   return fileOrderValue(b.filename) - fileOrderValue(a.filename);
 }
 
@@ -140,7 +138,6 @@ export async function loadLatestStoryArchive() {
           type,
           source: entry.name.startsWith("story-") ? "manual" : "automation",
           fileSize: stat.size,
-          modifiedAt: stat.mtimeMs,
         } satisfies FlatStoryCandidate;
       }),
   );
