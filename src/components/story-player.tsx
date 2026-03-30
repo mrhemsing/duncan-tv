@@ -115,18 +115,12 @@ export function StoryPlayer({
         ))}
       </div>
 
-      <button
-        type="button"
-        className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-black"
-        onClick={nextMedia}
-        onPointerUp={nextMedia}
-        aria-label="Skip to next story"
-      >
+      <div className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-black">
         {activeStory.assetType === "video" ? (
           <video
             ref={videoRef}
             src={activeStory.src}
-            className="h-[90%] w-[90%] max-w-none cursor-pointer object-cover"
+            className="h-[90%] w-[90%] max-w-none object-cover"
             autoPlay
             muted={muted}
             playsInline
@@ -135,9 +129,18 @@ export function StoryPlayer({
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={activeStory.src} alt={activeStory.title} className="h-[90%] w-[90%] max-w-none cursor-pointer object-cover" />
+          <img src={activeStory.src} alt={activeStory.title} className="h-[90%] w-[90%] max-w-none object-cover" />
         )}
-      </button>
+
+        <button
+          type="button"
+          className="absolute inset-0 z-30 cursor-pointer bg-transparent"
+          onClick={nextMedia}
+          onPointerDown={nextMedia}
+          aria-label="Skip to next story"
+          title="Skip to next story"
+        />
+      </div>
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_45%,_rgba(0,0,0,0.18)_100%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.06)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
