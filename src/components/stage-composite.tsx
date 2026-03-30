@@ -131,10 +131,13 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
               src="/duncan-tv-bg-99.webp"
               alt="Duncan TV illustrated stage"
               fill
-              className="pointer-events-none z-20 object-fill"
+              className="pointer-events-none z-20 object-contain object-center"
               priority
               unoptimized
             />
+
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[18vw] bg-gradient-to-r from-black via-black/72 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-[18vw] bg-gradient-to-l from-black via-black/72 to-transparent" />
           </div>
         </div>
       </div>
