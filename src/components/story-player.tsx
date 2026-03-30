@@ -138,13 +138,6 @@ export function StoryPlayer({
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_45%,_rgba(0,0,0,0.18)_100%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.06)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
 
-      <div className="pointer-events-none absolute bottom-[6%] left-[6%] right-[6%] z-20 flex items-center justify-between text-[9px] uppercase tracking-[0.22em] text-white/65 sm:text-[10px]">
-        <span>{activeStory.sourceLabel}</span>
-        <span>
-          {activeStory.assetType}
-          {activeStory.assetType === "video" ? (muted ? " · muted" : " · audio on") : ""}
-        </span>
-      </div>
     </div>
   );
 }
