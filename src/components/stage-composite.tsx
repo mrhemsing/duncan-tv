@@ -6,33 +6,33 @@ import { StoryPlayer } from "@/components/story-player";
 import type { StoryItem } from "@/lib/story-data";
 
 function useMobileLandscapeGate() {
-  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+  const [isMobileLandscape, setIsMobileLandscape] = useState(false);
 
   useEffect(() => {
     const coarseMedia = window.matchMedia("(pointer: coarse)");
-    const portraitMedia = window.matchMedia("(orientation: portrait)");
+    const landscapeMedia = window.matchMedia("(orientation: landscape)");
     const narrowMedia = window.matchMedia("(max-width: 899px)");
 
     const check = () => {
-      const nextIsPortrait = coarseMedia.matches && narrowMedia.matches && portraitMedia.matches;
-      setIsMobilePortrait(nextIsPortrait);
+      const nextIsLandscape = coarseMedia.matches && narrowMedia.matches && landscapeMedia.matches;
+      setIsMobileLandscape(nextIsLandscape);
     };
 
     check();
     coarseMedia.addEventListener?.("change", check);
-    portraitMedia.addEventListener?.("change", check);
+    landscapeMedia.addEventListener?.("change", check);
     narrowMedia.addEventListener?.("change", check);
     window.addEventListener("orientationchange", check);
 
     return () => {
       coarseMedia.removeEventListener?.("change", check);
-      portraitMedia.removeEventListener?.("change", check);
+      landscapeMedia.removeEventListener?.("change", check);
       narrowMedia.removeEventListener?.("change", check);
       window.removeEventListener("orientationchange", check);
     };
   }, []);
 
-  return isMobilePortrait;
+  return isMobileLandscape;
 }
 
 function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { sizeClass?: string }) {
@@ -55,9 +55,9 @@ function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { si
   );
 }
 
-function PortraitRotateGate() {
+function LandscapeRotateGate() {
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to view">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to continue">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_58%)]" />
       <div className="absolute inset-0 opacity-15 mix-blend-screen [background-image:linear-gradient(to_bottom,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_6px)] [background-size:100%_6px]" />
       <div className="relative z-10 flex max-w-[80%] flex-col items-center gap-5 text-center text-[#d7d0bc]">
@@ -74,7 +74,7 @@ function PortraitRotateGate() {
 
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
-  const isMobilePortrait = useMobileLandscapeGate();
+  const isMobileLandscape = useMobileLandscapeGate();
   const emit = (name: string) => () => window.dispatchEvent(new Event(name));
 
   useEffect(() => {
@@ -83,8 +83,8 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
     return () => window.removeEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
   }, []);
 
-  if (isMobilePortrait) {
-    return <PortraitRotateGate />;
+  if (isMobileLandscape) {
+    return <LandscapeRotateGate />;
   }
 
   return (
