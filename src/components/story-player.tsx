@@ -120,7 +120,7 @@ export function StoryPlayer({
           <video
             ref={videoRef}
             src={activeStory.src}
-            className="h-[90%] w-[90%] max-w-none object-cover"
+            className="h-[117%] w-[117%] max-w-none object-cover"
             autoPlay
             muted={muted}
             playsInline
@@ -129,7 +129,7 @@ export function StoryPlayer({
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={activeStory.src} alt={activeStory.title} className="h-[90%] w-[90%] max-w-none object-cover" />
+          <img src={activeStory.src} alt={activeStory.title} className="h-[117%] w-[117%] max-w-none object-cover" />
         )}
 
         <button

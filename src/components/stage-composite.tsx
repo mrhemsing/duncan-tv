@@ -1,11 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { StoryPlayer } from "@/components/story-player";
 import type { StoryItem } from "@/lib/story-data";
 
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
+  const [muted, setMuted] = useState(true);
   const emit = (name: string) => () => window.dispatchEvent(new Event(name));
+
+  useEffect(() => {
+    const handleToggle = () => setMuted((value) => !value);
+    window.addEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
+    return () => window.removeEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
+  }, []);
 
   return (
     <>
@@ -23,15 +31,21 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
       <div className="animate-[stageReveal_0.5s_ease_1.2s_forwards] opacity-0">
         <button
           type="button"
-          aria-label="Toggle screen audio"
+          aria-label={muted ? "Turn sound on" : "Turn sound off"}
           onClick={emit("duncan-tv-toggle-audio")}
           className="fixed right-3 top-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
-          title="Toggle sound"
+          title={muted ? "Turn sound on" : "Turn sound off"}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" fill="currentColor">
             <path d="M3 10v4h4l5 4V6L7 10H3z" />
-            <path d="M16.5 12a4.5 4.5 0 0 0-2.2-3.86v7.72A4.5 4.5 0 0 0 16.5 12z" />
-            <path d="M14.3 3.23v2.06a7.5 7.5 0 0 1 0 13.42v2.06a9.5 9.5 0 0 0 0-17.54z" />
+            {muted ? (
+              <path d="M18.3 8.3 16.89 6.89 14.8 8.98l-2.09-2.09-1.41 1.41 2.09 2.09-2.09 2.09 1.41 1.41 2.09-2.09 2.09 2.09 1.41-1.41-2.09-2.09 2.09-2.09z" />
+            ) : (
+              <>
+                <path d="M16.5 12a4.5 4.5 0 0 0-2.2-3.86v7.72A4.5 4.5 0 0 0 16.5 12z" />
+                <path d="M14.3 3.23v2.06a7.5 7.5 0 0 1 0 13.42v2.06a9.5 9.5 0 0 0 0-17.54z" />
+              </>
+            )}
           </svg>
         </button>
 
