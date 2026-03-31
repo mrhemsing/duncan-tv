@@ -121,10 +121,10 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
 
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-3 py-3">
         <div className="flex flex-col gap-1 text-center leading-[1.15]">
+          <div className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7]">B Average presents...</div>
           <div className="flex justify-center">
             <Image src="/dtv-logo.jpg" alt="DTV" width={72} height={36} className="h-auto w-[52px]" priority unoptimized />
           </div>
-          <div className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7]">B Average presents...</div>
           <div className="text-[14px] font-bold uppercase text-white/85">Duncan TV</div>
         </div>
       </div>
