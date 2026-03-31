@@ -102,52 +102,27 @@ function LandscapeRotateGate() {
   );
 }
 
-function MobilePortraitPlayer({ stories, muted, onToggle }: { stories: StoryItem[]; muted: boolean; onToggle: () => void }) {
-  const [phase, setPhase] = useState<"loading" | "intro" | "site">("loading");
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setPhase("intro"), 1200);
-    return () => window.clearTimeout(timer);
-  }, []);
-
+function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
   return (
-    <>
-      <AudioButton muted={muted} onToggle={onToggle} />
-
-      {phase === "loading" ? (
-        <div className="fixed inset-0 z-[250] flex items-center justify-center bg-black">
-          <div className="relative z-10 flex flex-col items-center gap-5 text-center text-[#d7d0bc]">
-            <RotateAnimationCircle sizeClass="h-24 w-24" />
-            <div className="text-[1rem] font-normal uppercase tracking-[0.28em] text-[#c7c7c7]">LOADING</div>
-          </div>
-        </div>
-      ) : null}
-
-      {phase === "intro" ? (
-        <div className="fixed inset-0 z-[240] bg-black">
-          <video
-            className="h-full w-full object-cover"
-            autoPlay
-            playsInline
-            muted
-            preload="auto"
-            poster="/mobile-intro-poster.jpg"
-            onEnded={() => setPhase("site")}
-          >
-            <source src="/mobile-intro.mp4" type="video/mp4" />
-          </video>
-        </div>
-      ) : null}
-
-      <div className={`fixed inset-0 z-[200] h-screen w-screen overflow-hidden bg-black ${phase === "site" ? "block" : "hidden"}`}>
-        <StoryPlayer stories={stories} className="h-full w-full" />
-      </div>
-    </>
+    <div className="fixed inset-0 z-[250] bg-black">
+      <video
+        className="h-full w-full object-cover"
+        autoPlay
+        playsInline
+        muted
+        preload="auto"
+        poster="/mobile-intro-poster.jpg"
+        onEnded={onDone}
+      >
+        <source src="/mobile-intro.mp4" type="video/mp4" />
+      </video>
+    </div>
   );
 }
 
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
+  const [showMobileIntro, setShowMobileIntro] = useState(true);
   const { isMobile, isMobileLandscape } = useMobileOrientationState();
   const toggleAudio = () => window.dispatchEvent(new Event("duncan-tv-toggle-audio"));
 
@@ -157,12 +132,14 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
     return () => window.removeEventListener("duncan-tv-toggle-audio", handleToggle as EventListener);
   }, []);
 
+  useEffect(() => {
+    if (!isMobile || isMobileLandscape) {
+      setShowMobileIntro(true);
+    }
+  }, [isMobile, isMobileLandscape]);
+
   if (isMobileLandscape) {
     return <LandscapeRotateGate />;
-  }
-
-  if (isMobile) {
-    return <MobilePortraitPlayer stories={stories} muted={muted} onToggle={toggleAudio} />;
   }
 
   return (
@@ -176,7 +153,9 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
         </div>
       </div>
 
-      <div className="animate-[stageReveal_0.5s_ease_1.2s_forwards] opacity-0">
+      {isMobile && showMobileIntro ? <MobilePortraitIntro onDone={() => setShowMobileIntro(false)} /> : null}
+
+      <div className={`animate-[stageReveal_0.5s_ease_1.2s_forwards] ${isMobile && showMobileIntro ? "opacity-0" : "opacity-100"}`}>
         <AudioButton muted={muted} onToggle={toggleAudio} />
 
         <div className="relative h-screen w-screen overflow-hidden bg-black">
