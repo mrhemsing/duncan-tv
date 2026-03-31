@@ -182,7 +182,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
         <AudioButton muted={muted} onToggle={toggleAudio} />
         <FooterBadge />
 
-        <div className="relative h-screen w-screen overflow-hidden bg-black">
+        <div className="relative h-[100dvh] max-h-[100dvh] w-screen overflow-hidden bg-black">
           <div className={`absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black ${isMobile ? "scale-[1.2] -translate-y-[calc(50%+60px)]" : "scale-100"}`}>
             <div className="absolute left-[calc(39.33625%+18px)] top-[calc(16.6%+60px-40px)] z-0 w-[18.792%] rotate-[0deg] transform-gpu">
               <div className="relative aspect-[9/16] overflow-hidden bg-black">
