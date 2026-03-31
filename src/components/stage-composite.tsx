@@ -119,8 +119,11 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
         <source src="/mobile-intro.mp4" type="video/mp4" />
       </video>
 
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 flex items-start justify-between px-3 py-3">
-        <div className="text-[10px] uppercase tracking-[0.28em] text-white/45">Duncan TV</div>
+      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-3 py-3">
+        <div className="flex flex-col gap-1 text-left leading-[1.15]">
+          <div className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7]">B Average presents...</div>
+          <div className="text-[11px] font-bold uppercase text-white/85">Duncan TV (DTV)</div>
+        </div>
       </div>
 
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
