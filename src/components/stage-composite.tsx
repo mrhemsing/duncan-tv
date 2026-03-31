@@ -8,6 +8,7 @@ import type { StoryItem } from "@/lib/story-data";
 function useMobileOrientationState() {
   const [isMobileLandscape, setIsMobileLandscape] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const coarseMedia = window.matchMedia("(pointer: coarse)");
@@ -19,6 +20,7 @@ function useMobileOrientationState() {
       const nextIsLandscape = nextIsMobile && landscapeMedia.matches;
       setIsMobile(nextIsMobile);
       setIsMobileLandscape(nextIsLandscape);
+      setIsReady(true);
     };
 
     check();
@@ -35,7 +37,7 @@ function useMobileOrientationState() {
     };
   }, []);
 
-  return { isMobile, isMobileLandscape };
+  return { isMobile, isMobileLandscape, isReady };
 }
 
 function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { sizeClass?: string }) {
@@ -133,7 +135,7 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
   const [showMobileIntro, setShowMobileIntro] = useState(true);
-  const { isMobile, isMobileLandscape } = useMobileOrientationState();
+  const { isMobile, isMobileLandscape, isReady } = useMobileOrientationState();
   const toggleAudio = () => window.dispatchEvent(new Event("duncan-tv-toggle-audio"));
 
   useEffect(() => {
@@ -147,6 +149,10 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
       setShowMobileIntro(true);
     }
   }, [isMobile, isMobileLandscape]);
+
+  if (!isReady) {
+    return <div className="fixed inset-0 bg-black" />;
+  }
 
   if (isMobileLandscape) {
     return <LandscapeRotateGate />;
