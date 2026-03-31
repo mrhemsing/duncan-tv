@@ -91,11 +91,15 @@ function sourceLabel(source: StorySource) {
   return source === "manual" ? "manual import" : "live capture";
 }
 
+function isManualStoryFilename(filename: string) {
+  return /^\d{3}\.(mp4|webm|mov|jpg|jpeg|png|webp)$/i.test(filename) || /^story-\d{3}\./i.test(filename);
+}
+
 function isPlayable(item: FlatStoryCandidate) {
   if (item.type !== "video") return false;
   const normalized = item.filename.replace(/\\/g, "/");
-  if (/story-00[23]\.mp4$/i.test(normalized) && item.fileSize < 600000) return false;
-  if (/story-005\.mp4$/i.test(normalized) && item.fileSize < 600000) return false;
+  if (/(^|\/)00[23]\.mp4$/i.test(normalized) && item.fileSize < 600000) return false;
+  if (/(^|\/)005\.mp4$/i.test(normalized) && item.fileSize < 600000) return false;
   if (/manual-00[2357]\.mp4$/i.test(normalized) && item.fileSize < 600000) return false;
   return true;
 }
@@ -136,7 +140,7 @@ export async function loadLatestStoryArchive() {
         return {
           filename: entry.name,
           type,
-          source: entry.name.startsWith("story-") ? "manual" : "automation",
+          source: isManualStoryFilename(entry.name) ? "manual" : "automation",
           fileSize: stat.size,
         } satisfies FlatStoryCandidate;
       }),
