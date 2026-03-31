@@ -129,7 +129,6 @@ export function StoryPlayer({
           type="button"
           className="absolute inset-0 z-30 cursor-pointer bg-transparent"
           onClick={nextMedia}
-          onPointerDown={nextMedia}
           aria-label="Skip to next story"
           title="Skip to next story"
         />
