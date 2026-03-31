@@ -33,15 +33,35 @@ type BroadcastPlaylist = {
   items?: PlaylistEntry[];
 };
 
+type RemoteManifest = {
+  title?: string;
+  description?: string;
+  mode?: "auto-fallback" | "manual-only";
+  baseUrl?: string;
+  stories?: Array<{
+    filename: string;
+    title?: string;
+    caption?: string;
+    durationSeconds?: number;
+    fileSize?: number;
+    assetType?: StoryAssetType;
+  }>;
+};
+
 type FlatStoryCandidate = {
   filename: string;
   type: StoryAssetType;
   source: StorySource;
   fileSize: number;
+  remoteUrl?: string;
+  durationSeconds?: number;
+  title?: string;
+  caption?: string;
 };
 
 const STORY_ROOT = path.join(process.cwd(), "media", "stories");
 const BROADCAST_PLAYLIST_PATH = path.join(process.cwd(), "broadcast", "playlist.json");
+const REMOTE_STORIES_MANIFEST_URL = process.env.REMOTE_STORIES_MANIFEST_URL || "";
 
 const accents = [
   "from-fuchsia-400/40 via-pink-400/15 to-transparent",
@@ -110,16 +130,51 @@ async function loadBroadcastPlaylist() {
   return JSON.parse(raw) as BroadcastPlaylist;
 }
 
+async function loadRemoteStories() {
+  if (!REMOTE_STORIES_MANIFEST_URL) return null;
+
+  try {
+    const response = await fetch(REMOTE_STORIES_MANIFEST_URL, { cache: "no-store" });
+    if (!response.ok) return null;
+    const manifest = (await response.json()) as RemoteManifest;
+    const baseUrl = manifest.baseUrl?.replace(/\/$/, "") || "";
+
+    const stories = (manifest.stories || [])
+      .map((entry) => {
+        const type = entry.assetType || inferredType(entry.filename);
+        if (!type) return null;
+        return {
+          filename: entry.filename,
+          type,
+          source: "manual" as const,
+          fileSize: entry.fileSize || 1000000,
+          remoteUrl: baseUrl ? `${baseUrl}/${encodeURIComponent(entry.filename)}` : entry.filename,
+          durationSeconds: entry.durationSeconds,
+          title: entry.title,
+          caption: entry.caption,
+        } satisfies FlatStoryCandidate;
+      })
+      .filter(Boolean) as FlatStoryCandidate[];
+
+    return {
+      stories,
+      manifest,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: PlaylistEntry): StoryItem {
   return {
     id: `${item.source}-${index + 1}`,
-    title: overrides?.title || titleFromFilename(item.filename, item.source),
-    caption: overrides?.caption || captionFromItem(item),
-    durationSeconds: item.type === "video" ? 15 : 10,
+    title: overrides?.title || item.title || titleFromFilename(item.filename, item.source),
+    caption: overrides?.caption || item.caption || captionFromItem(item),
+    durationSeconds: item.durationSeconds || (item.type === "video" ? 15 : 10),
     assetType: item.type,
     slotLabel: `Slot ${String(index + 1).padStart(2, "0")}`,
     accent: accents[index % accents.length],
-    src: `/api/story-media?file=${encodeURIComponent(item.filename)}`,
+    src: item.remoteUrl || `/api/story-media?file=${encodeURIComponent(item.filename)}`,
     filename: item.filename,
     source: item.source,
     sourceLabel: sourceLabel(item.source),
@@ -129,6 +184,38 @@ function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: Playli
 }
 
 export async function loadLatestStoryArchive() {
+  const remote = await loadRemoteStories();
+
+  if (remote?.stories?.length) {
+    const playable = remote.stories.filter(isPlayable).sort(newestFirst);
+    const playlist = await loadBroadcastPlaylist();
+    const playlistItems = (playlist?.items || [])
+      .map((entry) => {
+        const match = playable.find((item) => item.filename === entry.filename);
+        if (!match) return null;
+        return { item: match, overrides: entry };
+      })
+      .filter(Boolean) as { item: FlatStoryCandidate; overrides?: PlaylistEntry }[];
+
+    const finalCandidates = playlistItems.length
+      ? playlistItems
+      : playable.map((item) => ({ item, overrides: undefined }));
+
+    const stories = finalCandidates.map(({ item, overrides }, index) => toStoryItem(item, index, overrides));
+
+    return {
+      account: "duncantrussell",
+      captureDate: "live",
+      stories,
+      broadcastTitle: remote.manifest.title || playlist?.title || "Tonight's Broadcast",
+      broadcastDescription:
+        remote.manifest.description ||
+        playlist?.description ||
+        "A continuous videos-only loop built from Duncan story archives in remote storage.",
+      broadcastMode: playlistItems.length ? "manual-only" : remote.manifest.mode || playlist?.mode || "auto-fallback",
+    };
+  }
+
   const entries = await fs.readdir(STORY_ROOT, { withFileTypes: true }).catch(() => []);
   const files = await Promise.all(
     entries
