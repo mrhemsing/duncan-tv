@@ -19,7 +19,7 @@ export default async function Home() {
             href="https://b-average.com"
             target="_blank"
             rel="noreferrer"
-            className="text-[10px] uppercase tracking-[0.22em] text-white/45 transition hover:text-white/70 sm:text-xs"
+            className="text-[10px] uppercase tracking-[0.22em] text-[#c7c7c7] transition hover:text-white sm:text-xs"
           >
             B Average
           </a>
