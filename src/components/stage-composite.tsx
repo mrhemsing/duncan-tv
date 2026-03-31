@@ -5,8 +5,9 @@ import Image from "next/image";
 import { StoryPlayer } from "@/components/story-player";
 import type { StoryItem } from "@/lib/story-data";
 
-function useMobileLandscapeGate() {
+function useMobileOrientationState() {
   const [isMobileLandscape, setIsMobileLandscape] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const coarseMedia = window.matchMedia("(pointer: coarse)");
@@ -14,7 +15,9 @@ function useMobileLandscapeGate() {
     const narrowMedia = window.matchMedia("(max-width: 899px)");
 
     const check = () => {
-      const nextIsLandscape = coarseMedia.matches && narrowMedia.matches && landscapeMedia.matches;
+      const nextIsMobile = coarseMedia.matches && narrowMedia.matches;
+      const nextIsLandscape = nextIsMobile && landscapeMedia.matches;
+      setIsMobile(nextIsMobile);
       setIsMobileLandscape(nextIsLandscape);
     };
 
@@ -32,7 +35,7 @@ function useMobileLandscapeGate() {
     };
   }, []);
 
-  return isMobileLandscape;
+  return { isMobile, isMobileLandscape };
 }
 
 function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { sizeClass?: string }) {
@@ -72,9 +75,17 @@ function LandscapeRotateGate() {
   );
 }
 
+function MobilePortraitPlayer({ stories }: { stories: StoryItem[] }) {
+  return (
+    <div className="fixed inset-0 z-[200] h-screen w-screen overflow-hidden bg-black">
+      <StoryPlayer stories={stories} className="h-full w-full" />
+    </div>
+  );
+}
+
 export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
-  const isMobileLandscape = useMobileLandscapeGate();
+  const { isMobile, isMobileLandscape } = useMobileOrientationState();
   const emit = (name: string) => () => window.dispatchEvent(new Event(name));
 
   useEffect(() => {
@@ -85,6 +96,20 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
 
   if (isMobileLandscape) {
     return <LandscapeRotateGate />;
+  }
+
+  if (isMobile) {
+    return (
+      <>
+        <div className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-black animate-[preloaderFade_0.9s_ease_1.2s_forwards]">
+          <div className="relative z-10 flex flex-col items-center gap-5 text-center text-[#d7d0bc]">
+            <RotateAnimationCircle sizeClass="h-24 w-24" />
+            <div className="text-[1rem] font-normal uppercase tracking-[0.28em] text-[#c7c7c7]">LOADING</div>
+          </div>
+        </div>
+        <MobilePortraitPlayer stories={stories} />
+      </>
+    );
   }
 
   return (
