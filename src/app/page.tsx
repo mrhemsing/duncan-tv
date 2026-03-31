@@ -15,7 +15,7 @@ export default async function Home() {
           <div className="flex flex-col gap-1 text-center leading-[1.15] sm:gap-0.5 sm:text-left sm:leading-none">
             <div className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7] sm:text-xs">B Average presents</div>
             <div className="flex justify-center sm:justify-start">
-              <Image src="/logo-2.png" alt="DTV" width={72} height={36} className="h-auto w-[52px] sm:w-[60px]" priority unoptimized />
+              <Image src="/dtv-logo.png" alt="DTV" width={72} height={36} className="h-auto w-[52px] sm:w-[60px]" priority unoptimized />
             </div>
             <div className="text-[14px] font-bold uppercase text-white/85 sm:text-sm">Duncan TV</div>
           </div>
