@@ -51,6 +51,17 @@ const accents = [
   "from-emerald-300/30 via-teal-300/10 to-transparent",
 ];
 
+const FORCE_OLDEST_FILENAMES = new Set([
+  "story-024.mp4",
+  "story-025.mp4",
+  "story-026.mp4",
+  "story-027.mp4",
+  "story-028.mp4",
+  "story-029.mp4",
+  "story-030.mp4",
+  "story-037.mp4",
+]);
+
 function inferredType(filename: string): StoryAssetType | null {
   const ext = path.extname(filename).toLowerCase();
   if ([".mp4", ".webm", ".mov"].includes(ext)) return "video";
@@ -63,7 +74,13 @@ function fileOrderValue(filename: string) {
   return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
 }
 
+function oldestBucketRank(filename: string) {
+  return FORCE_OLDEST_FILENAMES.has(filename) ? 1 : 0;
+}
+
 function newestFirst(a: FlatStoryCandidate, b: FlatStoryCandidate) {
+  const bucketDelta = oldestBucketRank(a.filename) - oldestBucketRank(b.filename);
+  if (bucketDelta !== 0) return bucketDelta;
   return fileOrderValue(b.filename) - fileOrderValue(a.filename);
 }
 
