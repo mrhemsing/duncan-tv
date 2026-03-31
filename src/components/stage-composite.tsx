@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import BAverageBadge from "@/components/BAverageBadge";
 import { StoryPlayer } from "@/components/story-player";
 import type { StoryItem } from "@/lib/story-data";
 
@@ -121,7 +122,11 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
 
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-3 py-[23px]">
         <div className="flex flex-col gap-1 text-center leading-[1.15]">
-          <div className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7]">B Average presents</div>
+          <div>
+            <span className="pointer-events-auto inline-block">
+              <BAverageBadge variant="white" />
+            </span>
+          </div>
           <div className="text-[14px] font-bold uppercase text-white/85">Duncan TV</div>
         </div>
       </div>
