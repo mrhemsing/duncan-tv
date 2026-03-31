@@ -120,23 +120,19 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
         <source src="/mobile-intro.mp4" type="video/mp4" />
       </video>
 
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-3 py-[23px]">
-        <div className="flex flex-col gap-1 text-center leading-[1.15]">
-          <div className="flex items-center justify-center gap-2">
-            <span className="pointer-events-auto inline-block">
-              <BAverageBadge variant="white" />
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.28em] text-[#c7c7c7]">Presents</span>
-          </div>
-          <div className="text-[14px] font-bold uppercase text-white/85">Duncan TV</div>
-        </div>
-      </div>
-
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="animate-pulse text-[clamp(1.2rem,4vw,2rem)] font-semibold uppercase tracking-[0.28em] text-[#4cff72] drop-shadow-[0_0_18px_rgba(76,255,114,0.45)]">
           LOADING...
         </div>
       </div>
+    </div>
+  );
+}
+
+function FooterBadge() {
+  return (
+    <div className="fixed bottom-5 left-1/2 z-[999] -translate-x-1/2">
+      <BAverageBadge variant="white" />
     </div>
   );
 }
@@ -184,6 +180,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
 
       <div className={`animate-[stageReveal_0.5s_ease_1.2s_forwards] ${isMobile && showMobileIntro ? "opacity-0" : "opacity-100"}`}>
         <AudioButton muted={muted} onToggle={toggleAudio} />
+        <FooterBadge />
 
         <div className="relative h-screen w-screen overflow-hidden bg-black">
           <div className={`absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black ${isMobile ? "scale-[1.2]" : "scale-100"}`}>
