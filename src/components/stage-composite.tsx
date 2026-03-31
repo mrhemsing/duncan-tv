@@ -167,7 +167,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
             </div>
 
             <Image
-              src={isMobile ? "/duncan-bg-mobile-3.webp" : "/duncan-tv-bg-998.webp"}
+              src={isMobile ? "/duncan-bg-mobile-4.webp" : "/duncan-tv-bg-998.webp"}
               alt="Duncan TV illustrated stage"
               fill
               className="pointer-events-none z-20 object-contain object-center"
