@@ -58,6 +58,33 @@ function RotateAnimationCircle({ sizeClass = "h-28 w-28 sm:h-32 sm:w-32" }: { si
   );
 }
 
+function AudioButton({ muted, onToggle }: { muted: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={muted ? "Turn sound on" : "Turn sound off"}
+      onClick={onToggle}
+      className="fixed right-3 top-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
+      title={muted ? "Turn sound on" : "Turn sound off"}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 5 8.5 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h3.5L14 19V5Z" fill="currentColor" stroke="none" />
+        {muted ? (
+          <>
+            <path d="M17 9l4 4" />
+            <path d="M21 9l-4 4" />
+          </>
+        ) : (
+          <>
+            <path d="M17.5 8.5a5 5 0 0 1 0 7" />
+            <path d="M19.75 6a8.5 8.5 0 0 1 0 12" />
+          </>
+        )}
+      </svg>
+    </button>
+  );
+}
+
 function LandscapeRotateGate() {
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden bg-black" aria-label="Rotate phone to continue">
@@ -75,11 +102,14 @@ function LandscapeRotateGate() {
   );
 }
 
-function MobilePortraitPlayer({ stories }: { stories: StoryItem[] }) {
+function MobilePortraitPlayer({ stories, muted, onToggle }: { stories: StoryItem[]; muted: boolean; onToggle: () => void }) {
   return (
-    <div className="fixed inset-0 z-[200] h-screen w-screen overflow-hidden bg-black">
-      <StoryPlayer stories={stories} className="h-full w-full" />
-    </div>
+    <>
+      <AudioButton muted={muted} onToggle={onToggle} />
+      <div className="fixed inset-0 z-[200] h-screen w-screen overflow-hidden bg-black">
+        <StoryPlayer stories={stories} className="h-full w-full" />
+      </div>
+    </>
   );
 }
 
@@ -87,6 +117,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
   const [muted, setMuted] = useState(true);
   const { isMobile, isMobileLandscape } = useMobileOrientationState();
   const emit = (name: string) => () => window.dispatchEvent(new Event(name));
+  const toggleAudio = () => window.dispatchEvent(new Event("duncan-tv-toggle-audio"));
 
   useEffect(() => {
     const handleToggle = () => setMuted((value) => !value);
@@ -107,7 +138,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
             <div className="text-[1rem] font-normal uppercase tracking-[0.28em] text-[#c7c7c7]">LOADING</div>
           </div>
         </div>
-        <MobilePortraitPlayer stories={stories} />
+        <MobilePortraitPlayer stories={stories} muted={muted} onToggle={toggleAudio} />
       </>
     );
   }
@@ -124,28 +155,7 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
       </div>
 
       <div className="animate-[stageReveal_0.5s_ease_1.2s_forwards] opacity-0">
-        <button
-          type="button"
-          aria-label={muted ? "Turn sound on" : "Turn sound off"}
-          onClick={emit("duncan-tv-toggle-audio")}
-          className="fixed right-3 top-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
-          title={muted ? "Turn sound on" : "Turn sound off"}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M14 5 8.5 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h3.5L14 19V5Z" fill="currentColor" stroke="none" />
-            {muted ? (
-              <>
-                <path d="M17 9l4 4" />
-                <path d="M21 9l-4 4" />
-              </>
-            ) : (
-              <>
-                <path d="M17.5 8.5a5 5 0 0 1 0 7" />
-                <path d="M19.75 6a8.5 8.5 0 0 1 0 12" />
-              </>
-            )}
-          </svg>
-        </button>
+        <AudioButton muted={muted} onToggle={toggleAudio} />
 
         <div className="relative h-screen w-screen overflow-hidden bg-black">
           <div className="absolute left-1/2 top-1/2 h-[max(56.14vw,100vh)] w-[max(100vw,178.12vh)] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black">
