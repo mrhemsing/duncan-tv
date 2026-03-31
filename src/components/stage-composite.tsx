@@ -144,14 +144,16 @@ export function StageComposite({ stories }: { stories: StoryItem[] }) {
 
   return (
     <>
-      <div className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-black animate-[preloaderFade_0.9s_ease_1.2s_forwards]">
-        <div className="relative z-10 flex flex-col items-center gap-5 text-center text-[#d7d0bc]">
-          <RotateAnimationCircle sizeClass="h-24 w-24 sm:h-28 sm:w-28" />
-          <div className="text-[clamp(1rem,2.2vw,1.5rem)] font-normal uppercase tracking-[0.28em] text-[#c7c7c7]">
-            LOADING
+      {!isMobile ? (
+        <div className="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-black animate-[preloaderFade_0.9s_ease_1.2s_forwards]">
+          <div className="relative z-10 flex flex-col items-center gap-5 text-center text-[#d7d0bc]">
+            <RotateAnimationCircle sizeClass="h-24 w-24 sm:h-28 sm:w-28" />
+            <div className="text-[clamp(1rem,2.2vw,1.5rem)] font-normal uppercase tracking-[0.28em] text-[#c7c7c7]">
+              LOADING
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       {isMobile && showMobileIntro ? <MobilePortraitIntro onDone={() => setShowMobileIntro(false)} /> : null}
 
