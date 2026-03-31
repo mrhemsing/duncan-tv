@@ -14,6 +14,17 @@ export default async function Home() {
           <div className="text-[10px] uppercase tracking-[0.28em] text-white/45 sm:text-xs">Duncan TV</div>
         </div>
 
+        <div className="absolute bottom-3 left-3 z-40 sm:bottom-5 sm:left-5 lg:bottom-6 lg:left-6">
+          <a
+            href="https://b-average.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[10px] uppercase tracking-[0.22em] text-white/45 transition hover:text-white/70 sm:text-xs"
+          >
+            B Average
+          </a>
+        </div>
+
         <StageComposite stories={storyQueue} />
       </section>
     </main>
