@@ -17,21 +17,19 @@ export function StoryPlayer({
   const lastStoryIdsRef = useRef<string>("");
   const activeStory = stories[activeIndex];
 
-  const clampIndex = useCallback(
-    (index: number) => {
-      if (!stories.length) return 0;
-      return ((index % stories.length) + stories.length) % stories.length;
-    },
-    [stories.length],
-  );
-
   const nextMedia = useCallback(() => {
-    setActiveIndex((current) => clampIndex(current + 1));
-  }, [clampIndex]);
+    setActiveIndex((current) => {
+      if (!stories.length) return 0;
+      return Math.min(current + 1, stories.length - 1);
+    });
+  }, [stories.length]);
 
   const prevMedia = useCallback(() => {
-    setActiveIndex((current) => clampIndex(current - 1));
-  }, [clampIndex]);
+    setActiveIndex((current) => {
+      if (!stories.length) return 0;
+      return Math.max(current - 1, 0);
+    });
+  }, [stories.length]);
 
   useEffect(() => {
     const storyIds = stories.map((story) => story.id).join("|");
@@ -153,10 +151,20 @@ export function StoryPlayer({
 
         <button
           type="button"
-          className="absolute inset-0 z-30 cursor-pointer bg-transparent"
+          className="absolute inset-y-0 left-0 z-30 w-1/2 cursor-pointer bg-transparent"
+          onClick={prevMedia}
+          aria-label="Go to previous story"
+          title="Go to previous story"
+          disabled={activeIndex === 0}
+        />
+
+        <button
+          type="button"
+          className="absolute inset-y-0 right-0 z-30 w-1/2 cursor-pointer bg-transparent"
           onClick={nextMedia}
-          aria-label="Skip to next story"
-          title="Skip to next story"
+          aria-label="Go to next story"
+          title="Go to next story"
+          disabled={activeIndex === stories.length - 1}
         />
       </div>
 
