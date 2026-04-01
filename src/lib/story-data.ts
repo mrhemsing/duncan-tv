@@ -55,6 +55,10 @@ const accents = [
   "from-emerald-300/30 via-teal-300/10 to-transparent",
 ];
 
+const STREAM_TEST_MAP: Record<string, string> = {
+  "038.mp4": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/7561cc9757e9e3c506809b14f3aae091/manifest/video.m3u8",
+};
+
 function inferredType(filename: string): StoryAssetType | null {
   const ext = path.extname(filename).toLowerCase();
   if ([".mp4", ".webm", ".mov"].includes(ext)) return "video";
@@ -113,10 +117,6 @@ async function loadBroadcastPlaylist() {
   if (!raw) return null;
   return JSON.parse(raw) as BroadcastPlaylist;
 }
-
-const STREAM_TEST_MAP: Record<string, string> = {
-  "038.mp4": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/7561cc9757e9e3c506809b14f3aae091/manifest/video.m3u8",
-};
 
 function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: PlaylistEntry): StoryItem {
   const streamOverride = STREAM_TEST_MAP[item.filename];
@@ -179,4 +179,9 @@ export async function loadLatestStoryArchive() {
     account: "duncantrussell",
     captureDate: "live",
     stories,
-    broadcastTitle: 
+    broadcastTitle: playlist?.title || "Tonight's Broadcast",
+    broadcastDescription:
+      playlist?.description || "A continuous videos-only loop built from Duncan story archives in a single flat stories folder.",
+    broadcastMode: playlistItems.length ? "manual-only" : playlist?.mode || "auto-fallback",
+  };
+}
