@@ -125,6 +125,8 @@ export function StoryPlayer({
             playsInline
             preload="auto"
             onEnded={nextMedia}
+            onError={nextMedia}
+            onStalled={nextMedia}
             onLoadedMetadata={() => {
               if (!canPlay) {
                 const video = videoRef.current;
