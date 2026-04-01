@@ -26,13 +26,6 @@
       "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/34ff9af5bfcf75b5c2a3f3b08f02052b/watch"
     },
     {
-      "filename": "035.mp4",
-      "streamUid": "a16e5d3b0b37d4201b3f32cde54cd7db",
-      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a16e5d3b0b37d4201b3f32cde54cd7db/manifest/video.m3u8",
-      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a16e5d3b0b37d4201b3f32cde54cd7db/manifest/video.mpd",
-      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a16e5d3b0b37d4201b3f32cde54cd7db/watch"
-    },
-    {
       "filename": "034.mp4",
       "streamUid": "20b1155a473f52455300fdb4ff263c70",
       "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/20b1155a473f52455300fdb4ff263c70/manifest/video.m3u8",
