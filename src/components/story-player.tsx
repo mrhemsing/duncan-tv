@@ -12,6 +12,7 @@ export function StoryPlayer({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [muted, setMuted] = useState(true);
+  const [isVideoReady, setIsVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const lastStoryIdsRef = useRef<string>("");
   const activeStory = stories[activeIndex];
@@ -37,6 +38,7 @@ export function StoryPlayer({
     if (storyIds !== lastStoryIdsRef.current) {
       lastStoryIdsRef.current = storyIds;
       setActiveIndex(0);
+      setIsVideoReady(false);
     }
   }, [stories]);
 
@@ -74,6 +76,10 @@ export function StoryPlayer({
     return () => window.clearTimeout(timeout);
   }, [activeStory, stories.length, nextMedia]);
 
+  useEffect(() => {
+    setIsVideoReady(activeStory?.assetType !== "video");
+  }, [activeStory?.id, activeStory?.assetType]);
+
   const progressItems = useMemo(
     () =>
       stories.map((story, index) => ({
@@ -107,6 +113,11 @@ export function StoryPlayer({
       </div>
 
       <div className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-black">
+        <div
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-200 ${isVideoReady ? "opacity-0" : "opacity-100"}`}
+          style={{ backgroundImage: "url('/please-stand-by.jpg')" }}
+          aria-hidden="true"
+        />
         {activeStory.assetType === "video" ? (
           activeStory.src.includes(".m3u8") ? (
             <video
