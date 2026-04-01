@@ -5,6 +5,13 @@
   "customerSubdomain": "customer-55wr6tamfhuxsbtt.cloudflarestream.com",
   "stories": [
     {
+      "filename": "039.mp4",
+      "streamUid": "e045344462118e00af398a969c7516eb",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/e045344462118e00af398a969c7516eb/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/e045344462118e00af398a969c7516eb/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/e045344462118e00af398a969c7516eb/watch"
+    },
+    {
       "filename": "038.mp4",
       "streamUid": "9b666787c20d9e4243d163443a71a41d",
       "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/9b666787c20d9e4243d163443a71a41d/manifest/video.m3u8",
