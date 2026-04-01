@@ -6,9 +6,11 @@ import type { StoryItem } from "@/lib/story-data";
 export function StoryPlayer({
   stories,
   className = "",
+  canPlay = true,
 }: {
   stories: StoryItem[];
   className?: string;
+  canPlay?: boolean;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [muted, setMuted] = useState(true);
@@ -61,13 +63,17 @@ export function StoryPlayer({
     video.muted = muted;
     video.defaultMuted = muted;
 
-    if (!muted) {
-      video.play().catch(() => null);
+    if (!canPlay) {
+      video.pause();
+      video.currentTime = 0;
+      return;
     }
-  }, [muted, activeStory?.id]);
+
+    video.play().catch(() => null);
+  }, [muted, activeStory?.id, canPlay]);
 
   useEffect(() => {
-    if (!stories.length || !activeStory || activeStory.assetType === "video") return;
+    if (!canPlay || !stories.length || !activeStory || activeStory.assetType === "video") return;
 
     const timeout = window.setTimeout(() => {
       nextMedia();
@@ -114,11 +120,20 @@ export function StoryPlayer({
             ref={videoRef}
             src={activeStory.src}
             className="h-full w-full max-w-none object-cover object-center"
-            autoPlay
+            autoPlay={canPlay}
             muted={muted}
             playsInline
             preload="auto"
             onEnded={nextMedia}
+            onLoadedMetadata={() => {
+              if (!canPlay) {
+                const video = videoRef.current;
+                if (video) {
+                  video.pause();
+                  video.currentTime = 0;
+                }
+              }
+            }}
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
