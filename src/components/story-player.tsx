@@ -110,16 +110,29 @@ export function StoryPlayer({
 
       <div className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden bg-black">
         {activeStory.assetType === "video" ? (
-          <video
-            ref={videoRef}
-            src={activeStory.src}
-            className="h-full w-full max-w-none object-cover object-center"
-            autoPlay
-            muted={muted}
-            playsInline
-            preload="auto"
-            onEnded={nextMedia}
-          />
+          activeStory.src.includes(".m3u8") ? (
+            <video
+              ref={videoRef}
+              src={activeStory.src}
+              className="h-full w-full max-w-none object-cover object-center"
+              autoPlay
+              muted={muted}
+              playsInline
+              preload="auto"
+              onEnded={nextMedia}
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              src={activeStory.src}
+              className="h-full w-full max-w-none object-cover object-center"
+              autoPlay
+              muted={muted}
+              playsInline
+              preload="auto"
+              onEnded={nextMedia}
+            />
+          )
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={activeStory.src} alt={activeStory.title} className="h-full w-full max-w-none object-cover object-center" />
