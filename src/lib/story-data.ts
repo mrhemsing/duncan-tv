@@ -33,6 +33,22 @@ type BroadcastPlaylist = {
   items?: PlaylistEntry[];
 };
 
+type StreamManifestStory = {
+  filename: string;
+  streamUid?: string;
+  hls?: string;
+  dash?: string;
+  watch?: string;
+};
+
+type StreamManifest = {
+  title?: string;
+  description?: string;
+  provider?: string;
+  customerSubdomain?: string;
+  stories?: StreamManifestStory[];
+};
+
 type FlatStoryCandidate = {
   filename: string;
   type: StoryAssetType;
@@ -46,6 +62,7 @@ type FlatStoryCandidate = {
 
 const STORY_ROOT = path.join(process.cwd(), "media", "stories");
 const BROADCAST_PLAYLIST_PATH = path.join(process.cwd(), "broadcast", "playlist.json");
+const STREAM_MANIFEST_PATH = path.join(process.cwd(), "public", "stories.stream.json");
 
 const accents = [
   "from-fuchsia-400/40 via-pink-400/15 to-transparent",
@@ -55,13 +72,9 @@ const accents = [
   "from-emerald-300/30 via-teal-300/10 to-transparent",
 ];
 
-const STREAM_TEST_MAP: Record<string, string> = {
-  "038.mp4": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/7561cc9757e9e3c506809b14f3aae091/manifest/video.m3u8",
-};
-
 function inferredType(filename: string): StoryAssetType | null {
   const ext = path.extname(filename).toLowerCase();
-  if ([".mp4", ".webm", ".mov"].includes(ext)) return "video";
+  if ([".mp4", ".webm", ".mov", ".m3u8"].includes(ext)) return "video";
   if ([".jpg", ".jpeg", ".png", ".webp"].includes(ext)) return "image";
   return null;
 }
@@ -118,9 +131,13 @@ async function loadBroadcastPlaylist() {
   return JSON.parse(raw) as BroadcastPlaylist;
 }
 
-function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: PlaylistEntry): StoryItem {
-  const streamOverride = STREAM_TEST_MAP[item.filename];
+async function loadStreamManifest() {
+  const raw = await fs.readFile(STREAM_MANIFEST_PATH, "utf8").catch(() => null);
+  if (!raw) return null;
+  return JSON.parse(raw) as StreamManifest;
+}
 
+function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: PlaylistEntry): StoryItem {
   return {
     id: `${item.source}-${index + 1}`,
     title: overrides?.title || item.title || titleFromFilename(item.filename, item.source),
@@ -129,16 +146,61 @@ function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: Playli
     assetType: item.type,
     slotLabel: `Slot ${String(index + 1).padStart(2, "0")}`,
     accent: accents[index % accents.length],
-    src: streamOverride || item.remoteUrl || `/api/story-media?file=${encodeURIComponent(item.filename)}`,
+    src: item.remoteUrl || `/api/story-media?file=${encodeURIComponent(item.filename)}`,
     filename: item.filename,
     source: item.source,
-    sourceLabel: streamOverride ? "cloudflare stream test" : sourceLabel(item.source),
+    sourceLabel: sourceLabel(item.source),
     sortGroup: item.source === "automation" ? 0 : 1,
     fileSize: item.fileSize,
   };
 }
 
 export async function loadLatestStoryArchive() {
+  const streamManifest = await loadStreamManifest();
+
+  if (streamManifest?.stories?.length) {
+    const playable = streamManifest.stories
+      .map((entry) => {
+        if (!entry.hls) return null;
+        return {
+          filename: entry.filename,
+          type: "video" as const,
+          source: "manual" as const,
+          fileSize: 1000000,
+          remoteUrl: entry.hls,
+          durationSeconds: 15,
+        } satisfies FlatStoryCandidate;
+      })
+      .filter(Boolean) as FlatStoryCandidate[];
+
+    const playlist = await loadBroadcastPlaylist();
+    const playlistItems = (playlist?.items || [])
+      .map((entry) => {
+        const match = playable.find((item) => item.filename === entry.filename);
+        if (!match) return null;
+        return { item: match, overrides: entry };
+      })
+      .filter(Boolean) as { item: FlatStoryCandidate; overrides?: PlaylistEntry }[];
+
+    const finalCandidates = playlistItems.length
+      ? playlistItems
+      : playable.map((item) => ({ item, overrides: undefined }));
+
+    const stories = finalCandidates.map(({ item, overrides }, index) => toStoryItem(item, index, overrides));
+
+    return {
+      account: "duncantrussell",
+      captureDate: "live",
+      stories,
+      broadcastTitle: streamManifest.title || playlist?.title || "Tonight's Broadcast",
+      broadcastDescription:
+        streamManifest.description ||
+        playlist?.description ||
+        "A continuous videos-only loop built from Duncan story archives in Cloudflare Stream.",
+      broadcastMode: playlistItems.length ? "manual-only" : playlist?.mode || "auto-fallback",
+    };
+  }
+
   const entries = await fs.readdir(STORY_ROOT, { withFileTypes: true }).catch(() => []);
   const files = await Promise.all(
     entries
