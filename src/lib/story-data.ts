@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { headers } from "next/headers";
 
 export type StoryAssetType = "video" | "image";
 export type StorySource = "automation" | "manual";
@@ -63,6 +64,7 @@ type FlatStoryCandidate = {
 const STORY_ROOT = path.join(process.cwd(), "media", "stories");
 const BROADCAST_PLAYLIST_PATH = path.join(process.cwd(), "broadcast", "playlist.json");
 const STREAM_MANIFEST_PATH = path.join(process.cwd(), "public", "stories.stream.json");
+const STREAM_MANIFEST_API_PATH = "/api/stream-manifest";
 
 const accents = [
   "from-fuchsia-400/40 via-pink-400/15 to-transparent",
@@ -132,6 +134,17 @@ async function loadBroadcastPlaylist() {
 }
 
 async function loadStreamManifest() {
+  const incomingHeaders = await headers();
+  const host = incomingHeaders.get("x-forwarded-host") || incomingHeaders.get("host");
+  const proto = incomingHeaders.get("x-forwarded-proto") || "http";
+
+  if (host) {
+    const response = await fetch(`${proto}://${host}${STREAM_MANIFEST_API_PATH}`, { cache: "no-store" }).catch(() => null);
+    if (response?.ok) {
+      return (await response.json()) as StreamManifest;
+    }
+  }
+
   const raw = await fs.readFile(STREAM_MANIFEST_PATH, "utf8").catch(() => null);
   if (!raw) return null;
   return JSON.parse(raw) as StreamManifest;
