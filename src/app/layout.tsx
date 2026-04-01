@@ -19,7 +19,7 @@ const barrio = Barrio({
 });
 
 export const metadata: Metadata = {
-  title: "Duncan TV",
+  title: "DTV",
   description: "A looping television-channel concept built around Duncan Trussell story playback.",
 };
 
