@@ -3,6 +3,7 @@
   "description": "A continuous Duncan TV story loop.",
   "baseUrl": "https://duncan.b-average.com/stories",
   "stories": [
+    { "filename": "038.mp4" },
     { "filename": "037.mp4" },
     { "filename": "036.mp4" },
     { "filename": "035.mp4" },
