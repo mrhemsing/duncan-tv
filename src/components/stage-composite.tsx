@@ -67,10 +67,10 @@ function AudioButton({ muted, onToggle }: { muted: boolean; onToggle: () => void
       type="button"
       aria-label={muted ? "Turn sound on" : "Turn sound off"}
       onClick={onToggle}
-      className="fixed right-3 top-3 z-[999] flex h-7 w-7 items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
+      className="fixed right-3 top-3 z-[999] flex h-[39px] w-[39px] items-center justify-center rounded-full border-2 border-white/35 bg-black/75 text-white shadow-[0_10px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:bg-black/85 sm:right-5 sm:top-5 sm:h-16 sm:w-16"
       title={muted ? "Turn sound on" : "Turn sound off"}
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[10px] w-[10px] sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[14px] w-[14px] sm:h-8 sm:w-8" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 5 8.5 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h3.5L14 19V5Z" fill="currentColor" stroke="none" />
         {muted ? (
           <>
