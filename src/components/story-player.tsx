@@ -61,9 +61,7 @@ export function StoryPlayer({
     video.muted = muted;
     video.defaultMuted = muted;
 
-    if (!muted) {
-      video.play().catch(() => null);
-    }
+    video.play().catch(() => null);
   }, [muted, activeStory?.id]);
 
   useEffect(() => {
