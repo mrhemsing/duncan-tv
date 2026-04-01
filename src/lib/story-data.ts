@@ -19,6 +19,7 @@ export type StoryItem = {
   sourceLabel: string;
   sortGroup: number;
   fileSize: number;
+  fit?: "cover" | "contain";
 };
 
 type PlaylistEntry = {
@@ -151,6 +152,8 @@ async function loadStreamManifest() {
 }
 
 function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: PlaylistEntry): StoryItem {
+  const fit = item.filename === "032.mp4" ? "contain" : "cover";
+
   return {
     id: `${item.source}-${index + 1}`,
     title: overrides?.title || item.title || titleFromFilename(item.filename, item.source),
@@ -165,6 +168,7 @@ function toStoryItem(item: FlatStoryCandidate, index: number, overrides?: Playli
     sourceLabel: sourceLabel(item.source),
     sortGroup: item.source === "automation" ? 0 : 1,
     fileSize: item.fileSize,
+    fit,
   };
 }
 
