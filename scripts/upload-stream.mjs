@@ -1,4 +1,5 @@
-import fs from "node:fs/promises";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
 import path from "node:path";
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
@@ -15,14 +16,16 @@ if (!ACCOUNT_ID || !API_TOKEN || !CUSTOMER_SUBDOMAIN) {
 }
 
 async function uploadVideo(filePath, fileName) {
-  const bytes = await fs.readFile(filePath);
+  const form = new FormData();
+  form.append("file", new Blob([fs.readFileSync(filePath)], { type: "video/mp4" }), fileName);
+  form.append("meta", JSON.stringify({ name: fileName }));
+
   const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/stream`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${API_TOKEN}`,
-      "Content-Type": "video/mp4",
     },
-    body: bytes,
+    body: form,
   });
 
   if (!response.ok) {
@@ -39,13 +42,14 @@ async function uploadVideo(filePath, fileName) {
   return {
     filename: fileName,
     streamUid: uid,
-    streamUrl: `https://${CUSTOMER_SUBDOMAIN}/${uid}/manifest/video.m3u8`,
-    streamWatchUrl: `https://${CUSTOMER_SUBDOMAIN}/${uid}/watch`,
+    hls: `https://${CUSTOMER_SUBDOMAIN}/${uid}/manifest/video.m3u8`,
+    dash: `https://${CUSTOMER_SUBDOMAIN}/${uid}/manifest/video.mpd`,
+    watch: `https://${CUSTOMER_SUBDOMAIN}/${uid}/watch`,
   };
 }
 
 async function main() {
-  const raw = await fs.readFile(STORIES_PATH, "utf8");
+  const raw = await fsp.readFile(STORIES_PATH, "utf8");
   const manifest = JSON.parse(raw);
   const stories = manifest.stories || [];
   const output = {
@@ -58,13 +62,14 @@ async function main() {
 
   for (const entry of stories) {
     const filename = entry.filename;
-    const filePath = path.join(STORIES_DIR, filename);
-    console.log(`Uploading ${filename} to Cloudflare Stream...`);
-    const uploaded = await uploadVideo(filePath, filename);
+    const cleanFilename = String(filename).split("?")[0];
+    const filePath = path.join(STORIES_DIR, cleanFilename);
+    console.log(`Uploading ${cleanFilename} to Cloudflare Stream...`);
+    const uploaded = await uploadVideo(filePath, cleanFilename);
     output.stories.push(uploaded);
   }
 
-  await fs.writeFile(OUTPUT_PATH, JSON.stringify(output, null, 2) + "\n", "utf8");
+  await fsp.writeFile(OUTPUT_PATH, JSON.stringify(output, null, 2) + "\n", "utf8");
   console.log(`Wrote ${OUTPUT_PATH}`);
 }
 
