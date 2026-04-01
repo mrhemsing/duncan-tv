@@ -122,7 +122,7 @@ function MobilePortraitIntro({ onDone }: { onDone: () => void }) {
 
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="animate-pulse text-[clamp(1.2rem,4vw,2rem)] font-semibold uppercase tracking-[0.28em] text-[#4cff72] drop-shadow-[0_0_18px_rgba(76,255,114,0.45)]">
-          LOADING...
+          LOADING
         </div>
       </div>
     </div>
