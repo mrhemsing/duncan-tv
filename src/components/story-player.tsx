@@ -123,22 +123,26 @@ export function StoryPlayer({
             <video
               ref={videoRef}
               src={activeStory.src}
-              className="h-full w-full max-w-none object-cover object-center"
+              className={`h-full w-full max-w-none object-cover object-center transition-opacity duration-200 ${isVideoReady ? "opacity-100" : "opacity-0"}`}
               autoPlay
               muted={muted}
               playsInline
               preload="auto"
+              onCanPlay={() => setIsVideoReady(true)}
+              onPlaying={() => setIsVideoReady(true)}
               onEnded={nextMedia}
             />
           ) : (
             <video
               ref={videoRef}
               src={activeStory.src}
-              className="h-full w-full max-w-none object-cover object-center"
+              className={`h-full w-full max-w-none object-cover object-center transition-opacity duration-200 ${isVideoReady ? "opacity-100" : "opacity-0"}`}
               autoPlay
               muted={muted}
               playsInline
               preload="auto"
+              onCanPlay={() => setIsVideoReady(true)}
+              onPlaying={() => setIsVideoReady(true)}
               onEnded={nextMedia}
             />
           )
