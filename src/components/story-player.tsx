@@ -119,8 +119,6 @@ export function StoryPlayer({
             playsInline
             preload="auto"
             onEnded={nextMedia}
-            onError={nextMedia}
-            onStalled={nextMedia}
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
