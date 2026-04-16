@@ -5,6 +5,34 @@
   "customerSubdomain": "customer-55wr6tamfhuxsbtt.cloudflarestream.com",
   "stories": [
     {
+      "filename": "046.mp4",
+      "streamUid": "2809ec0ac8f0d66792f0369e09c80d7a",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/2809ec0ac8f0d66792f0369e09c80d7a/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/2809ec0ac8f0d66792f0369e09c80d7a/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/2809ec0ac8f0d66792f0369e09c80d7a/watch"
+    },
+    {
+      "filename": "047.mp4",
+      "streamUid": "905bbeb3b5504cadadbbeb018bc26ff4",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/905bbeb3b5504cadadbbeb018bc26ff4/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/905bbeb3b5504cadadbbeb018bc26ff4/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/905bbeb3b5504cadadbbeb018bc26ff4/watch"
+    },
+    {
+      "filename": "048.mp4",
+      "streamUid": "805b4f95182f025d8f837fabf5012bdc",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/805b4f95182f025d8f837fabf5012bdc/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/805b4f95182f025d8f837fabf5012bdc/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/805b4f95182f025d8f837fabf5012bdc/watch"
+    },
+    {
+      "filename": "049.mp4",
+      "streamUid": "a89e0cf6433661e1946046c22bb10cba",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a89e0cf6433661e1946046c22bb10cba/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a89e0cf6433661e1946046c22bb10cba/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/a89e0cf6433661e1946046c22bb10cba/watch"
+    },
+    {
       "filename": "041.mp4",
       "streamUid": "f3bea28eef4a084323b8697e11216a20",
       "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/f3bea28eef4a084323b8697e11216a20/manifest/video.m3u8",
