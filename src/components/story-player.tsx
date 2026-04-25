@@ -16,7 +16,8 @@ export function StoryPlayer({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const lastStoryIdsRef = useRef<string>("");
   const activeStory = stories[activeIndex];
-  const videoFitClass = activeStory?.fit === "contain" ? "object-contain bg-black" : "object-cover object-center";
+  const forceContain = activeStory?.filename === "032.mp4";
+  const videoFitClass = forceContain || activeStory?.fit === "contain" ? "object-contain bg-black" : "object-cover object-center";
 
   const nextMedia = useCallback(() => {
     setActiveIndex((current) => {

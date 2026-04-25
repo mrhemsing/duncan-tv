@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const { chromium } = require('playwright');
@@ -88,6 +89,21 @@ async function fileExists(p) {
   }
 }
 
+function hasVideoStream(filePath) {
+  try {
+    const ffmpegPath = process.env.FFMPEG_PATH || 'C:\\Windows\\ffmpeg.exe';
+    const result = spawnSync(ffmpegPath, ['-i', filePath, '-f', 'null', '-'], {
+      encoding: 'utf8',
+      timeout: 30000,
+      windowsHide: true,
+    });
+    const output = `${result.stdout || ''}\n${result.stderr || ''}`;
+    return /Stream #\d+:\d+.*Video:/i.test(output);
+  } catch {
+    return false;
+  }
+}
+
 async function downloadToFile(context, page, asset, destPath) {
   if (asset.type === 'video') {
     const trackedCandidates = (asset.trackedCandidates || [])
@@ -112,6 +128,10 @@ async function downloadToFile(context, page, asset, destPath) {
         if (!body.length) continue;
         if (body.length < 100000) continue;
         await fs.promises.writeFile(destPath, body);
+        if (!hasVideoStream(destPath)) {
+          await fs.promises.unlink(destPath).catch(() => null);
+          continue;
+        }
         return destPath;
       } catch {}
     }
@@ -229,12 +249,16 @@ async function detectStoryAsset(page, videoTracker) {
     return videoTracker.getCandidates(storyKey) || [];
   };
 
-  const pickTrackedVideoAsset = async () => {
+  const pickTrackedVideoAsset = async (reelId = null) => {
     const trackedCandidates = await getTrackedCandidates();
     const viableTrackedCandidates = (trackedCandidates || []).filter((candidate) => {
       if (!candidate || !candidate.url) return false;
       if (!candidate.contentLength) return true;
       return candidate.contentLength >= 200000;
+    }).filter((candidate) => {
+      if (!reelId) return true;
+      const haystack = `${candidate.url} ${JSON.stringify(candidate.headers || {})}`;
+      return haystack.includes(reelId);
     });
 
     if (!viableTrackedCandidates.length) return null;
@@ -249,21 +273,40 @@ async function detectStoryAsset(page, videoTracker) {
       perfUrls: [],
       trackedCandidates: viableTrackedCandidates,
       durationSec: null,
+      reelId,
     };
   };
 
   const storyContext = await page.evaluate(() => {
     const bodyText = document.body?.innerText || '';
+    const dialog = document.querySelector('div[role="dialog"]');
+    const dialogText = dialog?.textContent || '';
     const watchFullReel = /watch full reel/i.test(bodyText);
-    const sharedReel = /shared a reel/i.test(bodyText) || /reel by/i.test(bodyText);
-    return { watchFullReel, sharedReel };
-  }).catch(() => ({ watchFullReel: false, sharedReel: false }));
+    const sharedReel = /shared a reel/i.test(bodyText) || /reel by/i.test(bodyText) || /watch full reel/i.test(dialogText);
+    const hasStoryUrl = location.pathname.includes('/stories/');
+    const links = Array.from((dialog || document).querySelectorAll('a[href]'))
+      .map((a) => a.getAttribute('href') || '')
+      .filter(Boolean)
+      .slice(0, 50);
+    const reelLink = links.find((href) => /\/reel\//i.test(href)) || null;
+    const reelIdMatch = reelLink ? reelLink.match(/\/reel\/([^/?#]+)/i) : null;
+    return {
+      watchFullReel,
+      sharedReel,
+      hasStoryUrl,
+      dialogText,
+      links,
+      reelLink,
+      reelId: reelIdMatch ? reelIdMatch[1] : null,
+    };
+  }).catch(() => ({ watchFullReel: false, sharedReel: false, hasStoryUrl: false, dialogText: '', links: [], reelLink: null, reelId: null }));
 
   let videoAsset = await readVideoAsset();
   if (videoAsset) return videoAsset;
 
-  const initialTracked = await pickTrackedVideoAsset();
-  if (initialTracked) return initialTracked;
+  const initialTracked = await pickTrackedVideoAsset(storyContext.reelId);
+  if (storyContext.sharedReel && storyContext.reelId && initialTracked) return initialTracked;
+  if (initialTracked && storyContext.hasStoryUrl && !storyContext.watchFullReel && !storyContext.sharedReel) return initialTracked;
 
   const waitMs = storyContext.watchFullReel || storyContext.sharedReel ? 2200 : 900;
   await page.waitForTimeout(waitMs).catch(() => null);
@@ -271,8 +314,13 @@ async function detectStoryAsset(page, videoTracker) {
   videoAsset = await readVideoAsset();
   if (videoAsset) return videoAsset;
 
-  const trackedVideoAsset = await pickTrackedVideoAsset();
-  if (trackedVideoAsset) return trackedVideoAsset;
+  const trackedVideoAsset = await pickTrackedVideoAsset(storyContext.reelId);
+  if (storyContext.sharedReel && storyContext.reelId && trackedVideoAsset) return trackedVideoAsset;
+  if (trackedVideoAsset && storyContext.hasStoryUrl && !storyContext.watchFullReel && !storyContext.sharedReel) return trackedVideoAsset;
+
+  if (storyContext.watchFullReel || storyContext.sharedReel) {
+    return null;
+  }
 
   const imageAsset = await page.evaluate(() => {
     const candidates = Array.from(document.querySelectorAll('img'))

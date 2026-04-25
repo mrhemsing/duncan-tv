@@ -12,26 +12,15 @@ const CONTENT_TYPES: Record<string, string> = {
   ".mp4": "video/mp4",
 };
 
-function safeSegment(value: string) {
-  if (!value || value.includes("..") || value.includes("\\") || path.isAbsolute(value)) {
-    throw new Error("Invalid path segment");
-  }
-  return value;
-}
-
 export async function GET(request: NextRequest) {
   try {
-    const date = safeSegment(request.nextUrl.searchParams.get("date") || "");
-    const account = safeSegment(request.nextUrl.searchParams.get("account") || "");
     const fileParam = request.nextUrl.searchParams.get("file") || "";
-    if (!fileParam || fileParam.includes("..") || path.isAbsolute(fileParam)) {
+    if (!fileParam || fileParam.includes("..") || fileParam.includes("/") || fileParam.includes("\\") || path.isAbsolute(fileParam)) {
       throw new Error("Invalid file path");
     }
 
-    const normalized = fileParam.replace(/\\/g, "/");
-    const absolutePath = path.join(MEDIA_ROOT, date, account, normalized);
-    const resolved = path.resolve(absolutePath);
-    const allowedRoot = path.resolve(path.join(MEDIA_ROOT, date, account));
+    const resolved = path.resolve(path.join(MEDIA_ROOT, fileParam));
+    const allowedRoot = path.resolve(MEDIA_ROOT);
 
     if (!resolved.startsWith(allowedRoot)) {
       throw new Error("Path escaped root");
