@@ -5,6 +5,41 @@
   "customerSubdomain": "customer-55wr6tamfhuxsbtt.cloudflarestream.com",
   "stories": [
     {
+      "filename": "068.mp4",
+      "streamUid": "1ec574ba71143bc6f0d5e5a65c93a3f3",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/1ec574ba71143bc6f0d5e5a65c93a3f3/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/1ec574ba71143bc6f0d5e5a65c93a3f3/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/1ec574ba71143bc6f0d5e5a65c93a3f3/watch"
+    },
+    {
+      "filename": "067.mp4",
+      "streamUid": "fb0bee4a290f989febd19701347fddcc",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/fb0bee4a290f989febd19701347fddcc/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/fb0bee4a290f989febd19701347fddcc/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/fb0bee4a290f989febd19701347fddcc/watch"
+    },
+    {
+      "filename": "066.mp4",
+      "streamUid": "d48da8da88f6407fe981f33f73011ebe",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/d48da8da88f6407fe981f33f73011ebe/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/d48da8da88f6407fe981f33f73011ebe/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/d48da8da88f6407fe981f33f73011ebe/watch"
+    },
+    {
+      "filename": "065.mp4",
+      "streamUid": "b4c188bc9b5e351407028b601ba65be9",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/b4c188bc9b5e351407028b601ba65be9/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/b4c188bc9b5e351407028b601ba65be9/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/b4c188bc9b5e351407028b601ba65be9/watch"
+    },
+    {
+      "filename": "064.mp4",
+      "streamUid": "8cd33f4080fd257775ac450ceab939e9",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/8cd33f4080fd257775ac450ceab939e9/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/8cd33f4080fd257775ac450ceab939e9/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/8cd33f4080fd257775ac450ceab939e9/watch"
+    },
+    {
       "filename": "063.mp4",
       "streamUid": "0d1b49d306d7c1448b0f5863b79c445e",
       "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/0d1b49d306d7c1448b0f5863b79c445e/manifest/video.m3u8",
