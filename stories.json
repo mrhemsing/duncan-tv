@@ -1,196 +1,199 @@
-﻿{
-    "title":  "Tonight\u0027s Broadcast",
-    "description":  "A continuous Duncan TV story loop.",
-    "baseUrl":  "https://duncan.b-average.com/stories",
-    "stories":  [
-                    {
-                        "filename":  "071.mp4"
-                    },
-                    {
-                        "filename":  "070.mp4"
-                    },
-                    {
-                        "filename":  "069.mp4"
-                    },
-                    {
-                        "filename":  "068.mp4"
-                    },
-                    {
-                        "filename":  "067.mp4"
-                    },
-                    {
-                        "filename":  "066.mp4"
-                    },
-                    {
-                        "filename":  "065.mp4"
-                    },
-                    {
-                        "filename":  "064.mp4"
-                    },
-                    {
-                        "filename":  "063.mp4"
-                    },
-                    {
-                        "filename":  "062.mp4"
-                    },
-                    {
-                        "filename":  "061.mp4"
-                    },
-                    {
-                        "filename":  "060.mp4"
-                    },
-                    {
-                        "filename":  "059.mp4"
-                    },
-                    {
-                        "filename":  "058.mp4"
-                    },
-                    {
-                        "filename":  "057.mp4"
-                    },
-                    {
-                        "filename":  "056.mp4"
-                    },
-                    {
-                        "filename":  "055.mp4"
-                    },
-                    {
-                        "filename":  "054.mp4"
-                    },
-                    {
-                        "filename":  "053.mp4"
-                    },
-                    {
-                        "filename":  "052.mp4"
-                    },
-                    {
-                        "filename":  "051.mp4"
-                    },
-                    {
-                        "filename":  "050.mp4"
-                    },
-                    {
-                        "filename":  "049.mp4"
-                    },
-                    {
-                        "filename":  "048.mp4"
-                    },
-                    {
-                        "filename":  "047.mp4"
-                    },
-                    {
-                        "filename":  "046.mp4"
-                    },
-                    {
-                        "filename":  "045.mp4"
-                    },
-                    {
-                        "filename":  "044.mp4"
-                    },
-                    {
-                        "filename":  "043.mp4"
-                    },
-                    {
-                        "filename":  "042.mp4"
-                    },
-                    {
-                        "filename":  "041.mp4"
-                    },
-                    {
-                        "filename":  "040.mp4"
-                    },
-                    {
-                        "filename":  "039.mp4"
-                    },
-                    {
-                        "filename":  "038.mp4"
-                    },
-                    {
-                        "filename":  "037.mp4"
-                    },
-                    {
-                        "filename":  "036.mp4"
-                    },
-                    {
-                        "filename":  "034.mp4"
-                    },
-                    {
-                        "filename":  "032.mp4"
-                    },
-                    {
-                        "filename":  "031.mp4"
-                    },
-                    {
-                        "filename":  "030.mp4"
-                    },
-                    {
-                        "filename":  "029.mp4"
-                    },
-                    {
-                        "filename":  "028.mp4"
-                    },
-                    {
-                        "filename":  "027.mp4"
-                    },
-                    {
-                        "filename":  "025.mp4"
-                    },
-                    {
-                        "filename":  "023.mp4"
-                    },
-                    {
-                        "filename":  "022.mp4"
-                    },
-                    {
-                        "filename":  "021.mp4"
-                    },
-                    {
-                        "filename":  "020.mp4"
-                    },
-                    {
-                        "filename":  "019.mp4"
-                    },
-                    {
-                        "filename":  "018.mp4"
-                    },
-                    {
-                        "filename":  "017.mp4"
-                    },
-                    {
-                        "filename":  "016.mp4"
-                    },
-                    {
-                        "filename":  "014.mp4"
-                    },
-                    {
-                        "filename":  "011.mp4"
-                    },
-                    {
-                        "filename":  "010.mp4"
-                    },
-                    {
-                        "filename":  "009.mp4"
-                    },
-                    {
-                        "filename":  "008.mp4"
-                    },
-                    {
-                        "filename":  "007.mp4"
-                    },
-                    {
-                        "filename":  "006.mp4"
-                    },
-                    {
-                        "filename":  "004.mp4"
-                    },
-                    {
-                        "filename":  "003.mp4"
-                    },
-                    {
-                        "filename":  "002.mp4"
-                    },
-                    {
-                        "filename":  "001.mp4"
-                    }
-                ]
+{
+  "title": "Tonight's Broadcast",
+  "description": "A continuous Duncan TV story loop.",
+  "baseUrl": "https://duncan.b-average.com/stories",
+  "stories": [
+    {
+      "filename": "081.mp4"
+    },
+    {
+      "filename": "071.mp4"
+    },
+    {
+      "filename": "070.mp4"
+    },
+    {
+      "filename": "069.mp4"
+    },
+    {
+      "filename": "068.mp4"
+    },
+    {
+      "filename": "067.mp4"
+    },
+    {
+      "filename": "066.mp4"
+    },
+    {
+      "filename": "065.mp4"
+    },
+    {
+      "filename": "064.mp4"
+    },
+    {
+      "filename": "063.mp4"
+    },
+    {
+      "filename": "062.mp4"
+    },
+    {
+      "filename": "061.mp4"
+    },
+    {
+      "filename": "060.mp4"
+    },
+    {
+      "filename": "059.mp4"
+    },
+    {
+      "filename": "058.mp4"
+    },
+    {
+      "filename": "057.mp4"
+    },
+    {
+      "filename": "056.mp4"
+    },
+    {
+      "filename": "055.mp4"
+    },
+    {
+      "filename": "054.mp4"
+    },
+    {
+      "filename": "053.mp4"
+    },
+    {
+      "filename": "052.mp4"
+    },
+    {
+      "filename": "051.mp4"
+    },
+    {
+      "filename": "050.mp4"
+    },
+    {
+      "filename": "049.mp4"
+    },
+    {
+      "filename": "048.mp4"
+    },
+    {
+      "filename": "047.mp4"
+    },
+    {
+      "filename": "046.mp4"
+    },
+    {
+      "filename": "045.mp4"
+    },
+    {
+      "filename": "044.mp4"
+    },
+    {
+      "filename": "043.mp4"
+    },
+    {
+      "filename": "042.mp4"
+    },
+    {
+      "filename": "041.mp4"
+    },
+    {
+      "filename": "040.mp4"
+    },
+    {
+      "filename": "039.mp4"
+    },
+    {
+      "filename": "038.mp4"
+    },
+    {
+      "filename": "037.mp4"
+    },
+    {
+      "filename": "036.mp4"
+    },
+    {
+      "filename": "034.mp4"
+    },
+    {
+      "filename": "032.mp4"
+    },
+    {
+      "filename": "031.mp4"
+    },
+    {
+      "filename": "030.mp4"
+    },
+    {
+      "filename": "029.mp4"
+    },
+    {
+      "filename": "028.mp4"
+    },
+    {
+      "filename": "027.mp4"
+    },
+    {
+      "filename": "025.mp4"
+    },
+    {
+      "filename": "023.mp4"
+    },
+    {
+      "filename": "022.mp4"
+    },
+    {
+      "filename": "021.mp4"
+    },
+    {
+      "filename": "020.mp4"
+    },
+    {
+      "filename": "019.mp4"
+    },
+    {
+      "filename": "018.mp4"
+    },
+    {
+      "filename": "017.mp4"
+    },
+    {
+      "filename": "016.mp4"
+    },
+    {
+      "filename": "014.mp4"
+    },
+    {
+      "filename": "011.mp4"
+    },
+    {
+      "filename": "010.mp4"
+    },
+    {
+      "filename": "009.mp4"
+    },
+    {
+      "filename": "008.mp4"
+    },
+    {
+      "filename": "007.mp4"
+    },
+    {
+      "filename": "006.mp4"
+    },
+    {
+      "filename": "004.mp4"
+    },
+    {
+      "filename": "003.mp4"
+    },
+    {
+      "filename": "002.mp4"
+    },
+    {
+      "filename": "001.mp4"
+    }
+  ]
 }
