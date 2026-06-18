@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barrio, Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +34,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${barrio.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#120f1d] text-[#f4efe7]">{children}</body>
+      <body className="min-h-full bg-[#120f1d] text-[#f4efe7]">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
