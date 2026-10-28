@@ -6,10 +6,10 @@
   "stories": [
     {
       "filename": "091.mp4",
-      "streamUid": "219ffab73d3ee894c032be7cf55cfa6f",
-      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/219ffab73d3ee894c032be7cf55cfa6f/manifest/video.m3u8",
-      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/219ffab73d3ee894c032be7cf55cfa6f/manifest/video.mpd",
-      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/219ffab73d3ee894c032be7cf55cfa6f/watch"
+      "streamUid": "dd9e9a29e10cb79e7a097dfd2aa84202",
+      "hls": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/dd9e9a29e10cb79e7a097dfd2aa84202/manifest/video.m3u8",
+      "dash": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/dd9e9a29e10cb79e7a097dfd2aa84202/manifest/video.mpd",
+      "watch": "https://customer-55wr6tamfhuxsbtt.cloudflarestream.com/dd9e9a29e10cb79e7a097dfd2aa84202/watch"
     },
     {
       "filename": "090.mp4",
